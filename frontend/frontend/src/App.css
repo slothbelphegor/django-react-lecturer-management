@@ -1,0 +1,41 @@
+.myBackground {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #8BC6EC;
+    background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+}
+
+.whiteBox {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    min-width: 300px;
+    height: 70%;
+    width: 25%;
+    border: 1px solid #333
+}
+
+.itemBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 70px;
+}
+
+.title {
+    font-size: 30px;
+    color: #333
+}
+
+.myForm, .myButton
+{
+    width: 100%;
+}
+
+.myButton {
+    background-color: #639fc7 !important;
+}
