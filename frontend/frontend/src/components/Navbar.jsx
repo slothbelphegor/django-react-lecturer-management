@@ -18,8 +18,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import {Link, useLocation}  from 'react-router-dom'
 import AxiosInstance from './AxiosInstance';
 import { useNavigate } from 'react-router-dom';
-
-
+import Menu from './Menu';
 const drawerWidth = 240;
 
 export default function Navbar(props) {
@@ -58,7 +57,7 @@ export default function Navbar(props) {
         }}
       >
         <Toolbar />
-        <Box sx={{ overflow: 'auto' }}>
+        {/* <Box sx={{ overflow: 'auto' }}>
           <List>
             
               <ListItem key={1} disablePadding>
@@ -87,10 +86,12 @@ export default function Navbar(props) {
                   <ListItemText primary={"Logout"} />
                 </ListItemButton>
               </ListItem>
+              
 
           </List>
           
-        </Box>
+        </Box> */}
+        <Menu/>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />

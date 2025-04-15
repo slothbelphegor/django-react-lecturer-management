@@ -1,4 +1,4 @@
-import AxiosInstance from "./AxiosInstance";
+import AxiosInstance from "../components/AxiosInstance";
 import { React, useEffect, useState } from "react";
 import { Box } from "@mui/material"
 

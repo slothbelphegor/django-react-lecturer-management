@@ -1,14 +1,20 @@
-import { useState } from 'react'
-import './App.css'
-import Home from './components/Home'
-import Login from './components/Login'
-import Register from './components/Register'
-import Navbar from './components/Navbar'
-import About from './components/About'
-import ProtectedRoute from './components/ProtectedRoutes'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import PasswordResetRequest from './components/PasswordResetRequest'
-import PasswordReset from './components/PasswordReset'
+import './App.css'
+import Home from './pages/Home'
+
+import Navbar from './components/Navbar'
+import ProtectedRoute from './components/ProtectedRoutes'
+
+import Login from './pages/auth/Login'
+import Register from './pages/auth/Register'
+import PasswordResetRequest from './pages/auth/PasswordResetRequest'
+import PasswordReset from './pages/auth/PasswordReset'
+
+import CreateLecturer from './pages/lecturers/Create'
+import EditLecturer from './pages/lecturers/Edit'
+import DeleteLecturer from './pages/lecturers/Delete'
+import ListLecturer from './pages/lecturers/List'
+
 
 function App() {
   const location = useLocation()
@@ -29,7 +35,10 @@ function App() {
               <Routes>
                 <Route element={<ProtectedRoute/>}>
                   <Route path="/" element={<Home />} />
-                  <Route path="/about" element={<About />} />
+                  <Route path="/lecturers" element={<ListLecturer />} />
+                  <Route path="/lecturers/create" element={<CreateLecturer />}/>
+                  <Route path="/lecturers/edit/:id" element={<EditLecturer />}/>
+                  <Route path="/lecturers/delete/:id" element={<DeleteLecturer />}/>
                 </Route>
               </Routes>
             }

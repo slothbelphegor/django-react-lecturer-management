@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
     'knox',
-    'django_rest_passwordreset'
+    'django_rest_passwordreset',
+    'lecturers',
 ]
 
 MIDDLEWARE = [

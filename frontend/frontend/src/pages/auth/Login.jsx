@@ -1,20 +1,31 @@
-import "../App.css"
+import "../../App.css"
 import { Box } from "@mui/material"
 import { Link } from "react-router-dom"
 import { useForm } from 'react-hook-form'
 import { useNavigate } from "react-router-dom"
 import { React, useState } from "react";
-import MyMessage from "./Message"
-import MyTextField from "./forms/myTextField"
-import MyPasswordField from "./forms/MyPasswordField"
-import MyButton from "./forms/MyButton"
-import AxiosInstance from "./AxiosInstance"
+import MyMessage from "../../components/Message"
+import MyTextField from "../../components/forms/MyTextField"
+import MyPasswordField from "../../components/forms/MyPasswordField"
+import MyButton from "../../components/forms/MyButton"
+import AxiosInstance from "../../components/AxiosInstance"
 
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
 
 const Login = () => {
     const navigate = useNavigate()  // Used for page navigation
-    const { handleSubmit, control } = useForm()
     const [showMessage, setShowMessage] = useState(false)
+
+    const schema = yup.object().shape({
+        username_or_email: yup.string().required('Username or email is required'),
+        password: yup.string().required('Password is required')
+    })
+    const resolvedSchema = yupResolver(schema)
+    const { handleSubmit, control } = useForm({
+        resolver: resolvedSchema,
+    })
+
     const submission = (data) => {
         // What to do when clicking submit
         AxiosInstance.post(`login/`, {
@@ -22,7 +33,6 @@ const Login = () => {
             password: data.password,
         }).then((response) => {
             // What to do after the request
-            
             console.log(response)
             // Store the token in localStorage
             localStorage.setItem("Token", response.data.token)
@@ -35,7 +45,10 @@ const Login = () => {
     }
     return (
         <div className={"myBackground"}>
-            {showMessage ? <MyMessage text={"Login failed. Please try again."} color={'#EC5A76'}/> : null}
+            {showMessage ? <MyMessage 
+                                text={"Login failed. Please try again."} 
+                                color={'#EC5A76'}
+                                position={"absolute"}/> : null}
             <form onSubmit={handleSubmit(submission)}>
                 <Box className={"whiteBox"}>
                     <Box className={"itemBox"}>

@@ -7,6 +7,5 @@ export default function MyButton(props) {
       <Button type={type} variant="contained" className='myButton'>
         {label}
       </Button>
-
   );
 }

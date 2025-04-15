@@ -12,9 +12,9 @@
     background-color: white;
     padding: 20px;
     border-radius: 5px;
-    min-width: 300px;
+    min-width: 330px;
     height: 70%;
-    width: 25%;
+    width: 50%;
     border: 1px solid #333
 }
 
@@ -24,6 +24,7 @@
     align-items: center;
     width: 100%;
     height: 70px;
+    padding-bottom: 15px;
 }
 
 .title {
@@ -39,3 +40,34 @@
 .myButton {
     background-color: #639fc7 !important;
 }
+
+.Mui-selected {
+    background-color: #84bce2 !important;
+}
+
+.topbar {
+    display: flex;
+    padding: 10px;
+    background-color: rgb(18, 18, 146);
+    color: white;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.formBox {
+    width: 100%;
+    padding: 50px;
+    min-height: 100px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    box-shadow:#d6d6d6 0px 7px 29px 0px;
+}
+
+.formArea {
+    width: 33%;
+    padding: 15px;
+    margin-bottom: 20px;   
+}
+

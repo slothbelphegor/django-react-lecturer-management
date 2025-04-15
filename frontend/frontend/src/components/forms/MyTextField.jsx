@@ -12,8 +12,7 @@ export default function MyTextField(props) {
             defaultValue={""}
             render={({
                 field: { onChange, value },
-                fieldState: { error },
-                formState,
+                fieldState: { error }
             }) => (
                 <TextField
                     id="outlined-basic"

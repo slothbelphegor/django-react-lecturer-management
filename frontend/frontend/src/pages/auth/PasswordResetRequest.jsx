@@ -1,13 +1,12 @@
-import "../App.css"
+import "../../App.css"
 import { Box } from "@mui/material"
-import MyTextField from "./forms/myTextField"
 import { React,  useState } from "react";
-import MyPasswordField from "./forms/MyPasswordField"
-import MyButton from "./forms/MyButton"
-import { Link } from "react-router-dom"
 import { useForm } from 'react-hook-form'
-import AxiosInstance from "./AxiosInstance"
-import MyMessage from "./Message"
+import AxiosInstance from "../../components/AxiosInstance";
+import MyMessage from "../../components/Message";
+import MyTextField from "../../components/forms/MyTextField";
+import MyButton from "../../components/forms/MyButton";
+
 
 const PasswordResetRequest = () => {
     const { handleSubmit, control } = useForm()
@@ -25,7 +24,10 @@ const PasswordResetRequest = () => {
     }
     return (
         <div className={"myBackground"}>
-            {showMessage ? <MyMessage text={"If your email exists, you have received the instructions for resetting the password."} color={'#69C9AB'}/> : null}
+            {showMessage ? <MyMessage 
+                                text={"If your email exists, you have received the instructions for resetting the password."} 
+                                color={'#69C9AB'}
+                                position={"absolute"}/> : null}
             <form onSubmit={handleSubmit(submission)}>
                 <Box className={"whiteBox"}> 
                     <Box className={"itemBox"}>
