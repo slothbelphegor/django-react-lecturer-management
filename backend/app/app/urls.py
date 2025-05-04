@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
     path('' , include('lecturers.urls')),
+    path('', include('documents.urls')),
     
     # Authentication paths from Knox
     # path('api/auth/', include('knox.urls')),

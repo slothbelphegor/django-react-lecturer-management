@@ -1,96 +1,145 @@
-import * as React from 'react';
-import ListSubheader from '@mui/material/ListSubheader';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import PeopleIcon from '@mui/icons-material/People';
-import HomeIcon from '@mui/icons-material/Home';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import LogoutIcon from '@mui/icons-material/Logout';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import StarBorder from '@mui/icons-material/StarBorder';
+import * as React from "react";
+import ListSubheader from "@mui/material/ListSubheader";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Collapse from "@mui/material/Collapse";
+import PeopleIcon from "@mui/icons-material/People";
+import HomeIcon from "@mui/icons-material/Home";
+import ArchiveIcon from '@mui/icons-material/Archive';
+import UploadIcon from '@mui/icons-material/Upload';
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import LogoutIcon from "@mui/icons-material/Logout";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import BookIcon from '@mui/icons-material/Book';
 
-import {Link}  from 'react-router-dom'
-import AxiosInstance from './AxiosInstance';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import AxiosInstance from "./AxiosInstance";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Menu() {
-    const [open, setOpen] = React.useState(true);
-    const location = useLocation();  // define which route is used
-    const path = location.pathname 
-    const navigate = useNavigate();
-    const handleClick = () => {
-        setOpen(!open);
-    };
-    const logoutUser = () => {
-        AxiosInstance.post('logout/', {})
-         .then(() => {
-            localStorage.removeItem('Token');
-            navigate('/login');
-          })
-         .catch((error) => {
-            console.log(error);
-          });
-      }
+  const [open, setOpen] = React.useState('');
+  const handleClick = (section) => {
+    setOpen(open === section ? '' : section);
+  };
+  const location = useLocation(); // define which route is used
+  const path = location.pathname;
+  const navigate = useNavigate();
+ 
+  const logoutUser = () => {
+    AxiosInstance.post("logout/", {})
+      .then(() => {
+        localStorage.removeItem("Token");
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-    return (
-        <List
-            sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-            component="nav"
-            aria-labelledby="nested-list-subheader"
-            subheader={
-                <ListSubheader component="div" id="nested-list-subheader">
-                   Lecturers
-                </ListSubheader>
-            }
-        >
-            <ListItemButton component={Link} to="/"
-                selected={"/" === path}>
-                <ListItemIcon>
-                    <HomeIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Home"} />
-            </ListItemButton>
-            <ListItemButton component={Link} to="/lecturers"
-                selected={"/lecturers" === path}>
-                <ListItemIcon>
-                    <PeopleIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Browse Lecturers"} />
-            </ListItemButton>
-            <ListItemButton component={Link} to="/lecturers/create"
-                selected={"/lecturers/create" === path}>
-                <ListItemIcon>
-                    <GroupAddIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Add Lecturer"} />
-            </ListItemButton>
-            <ListItemButton onClick={handleClick}>
-                <ListItemIcon>
-                    <PeopleIcon />
-                </ListItemIcon>
-                <ListItemText primary="Temp" />
-                {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                            <GroupAddIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Test" />
-                    </ListItemButton>
-                </List>
-            </Collapse>
-            <ListItemButton onClick={logoutUser}>
-                <ListItemIcon>
-                    <LogoutIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Logout"} />
-            </ListItemButton>
+  return (
+    <List
+      sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+      component="nav"
+      aria-labelledby="nested-list-subheader"
+    //   subheader={
+    //     <ListSubheader component="div" id="nested-list-subheader">
+    //       Lecturers
+    //     </ListSubheader>
+    //   }
+    >
+      <ListItemButton component={Link} to="/" selected={"/" === path}>
+        <ListItemIcon>
+          <HomeIcon />
+        </ListItemIcon>
+        <ListItemText primary={"Trang chủ"} />
+      </ListItemButton>
+      
+      <ListItemButton 
+        onClick={() => handleClick('lecturers')}
+        component={Link}
+        to="/lecturers"
+        selected={"/lecturers" === path}>
+        <ListItemIcon>
+          <PeopleIcon />
+        </ListItemIcon>
+        <ListItemText primary="Giảng viên" />
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={open == 'lecturers'} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton 
+            sx={{ pl: 4 }}
+            component={Link}
+            to="/lecturers/create"
+            selected={"/lecturers/create" === path}>
+            <ListItemIcon>
+              <GroupAddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Thêm giảng viên" />
+          </ListItemButton>
         </List>
-    );
+      </Collapse>
+      <ListItemButton 
+        onClick={() => handleClick('subjects')}
+        component={Link}
+        to="/subjects"
+        selected={"/subjects" === path}>
+        <ListItemIcon>
+          <BookIcon />
+        </ListItemIcon>
+        <ListItemText primary="Môn học" />
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={open == 'subjects'} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton 
+            sx={{ pl: 4 }}
+            component={Link}
+            to="/subjects/create"
+            selected={"/subjects/create" === path}>
+            <ListItemIcon>
+              <GroupAddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Thêm môn học" />
+          </ListItemButton>
+        </List>
+      </Collapse>
+      <ListItemButton 
+        onClick={() => handleClick('documents')}
+        component={Link}
+        to="/documents"
+        selected={"/documents" === path}>
+        <ListItemIcon>
+          <ArchiveIcon />
+        </ListItemIcon>
+        <ListItemText primary="Văn bản" />
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={open == 'documents'} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton 
+            sx={{ pl: 4 }}
+            component={Link}
+            to="/documents/create"
+            selected={"/documents/create" === path}>
+            <ListItemIcon>
+              <UploadIcon />
+            </ListItemIcon>
+            <ListItemText primary="Thêm văn bản" />
+          </ListItemButton>
+        </List>
+      </Collapse>
+      
+      
+      <ListItemButton onClick={logoutUser}>
+        <ListItemIcon>
+          <LogoutIcon />
+        </ListItemIcon>
+        <ListItemText primary={"Đăng xuất"} />
+      </ListItemButton>
+    </List>
+  );
 }

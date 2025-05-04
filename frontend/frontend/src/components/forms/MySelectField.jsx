@@ -29,8 +29,8 @@ export default function MySelectField(props) {
                     >
                         {
                             options.map((option) => (
-                                <MenuItem key={option.id} value={option.id}>
-                                    {option.name || "None"}
+                                <MenuItem key={option.id} value={option.value}>
+                                    {option.value || "None"}
                                 </MenuItem>
                             ))
                         }

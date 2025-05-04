@@ -15,6 +15,15 @@ import EditLecturer from './pages/lecturers/Edit'
 import DeleteLecturer from './pages/lecturers/Delete'
 import ListLecturer from './pages/lecturers/List'
 
+import ListSubject from './pages/subjects/List'
+import CreateSubject from './pages/subjects/Create'
+import EditSubject from './pages/subjects/Edit'
+import DeleteSubject from './pages/subjects/Delete'
+import ListDocument from './pages/documents/List'
+import CreateDocument from './pages/documents/Create'
+import DeleteDocument from './pages/documents/Delete'
+import EditDocument from './pages/documents/Edit'
+
 
 function App() {
   const location = useLocation()
@@ -39,6 +48,14 @@ function App() {
                   <Route path="/lecturers/create" element={<CreateLecturer />}/>
                   <Route path="/lecturers/edit/:id" element={<EditLecturer />}/>
                   <Route path="/lecturers/delete/:id" element={<DeleteLecturer />}/>
+                  <Route path="/subjects" element={<ListSubject/>}></Route>
+                  <Route path="/subjects/create" element={<CreateSubject/>}></Route>
+                  <Route path="/subjects/edit/:id" element={<EditSubject />}/>
+                  <Route path="/subjects/delete/:id" element={<DeleteSubject />}/>
+                  <Route path="/documents" element={<ListDocument/>}></Route>
+                  <Route path="/documents/create" element={<CreateDocument/>}></Route>
+                  <Route path="/documents/delete/:id" element={<DeleteDocument />}/>
+                  <Route path="/documents/edit/:id" element={<EditDocument />}/>
                 </Route>
               </Routes>
             }

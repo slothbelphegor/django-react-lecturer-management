@@ -34,9 +34,10 @@ export default function MyMultiSelectField(props) {
         fieldState: { error }
       }) => (
         <div>
-          <FormControl sx={{ m: 1, width: 300 }}>
+          <FormControl sx={{ m: 1, width: "100%" }}>
             <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
             <Select
+              
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple

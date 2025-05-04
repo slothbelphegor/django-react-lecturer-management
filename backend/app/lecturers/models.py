@@ -16,21 +16,37 @@ class Lecturer(models.Model):
     name = models.CharField(max_length=30)
     email = models.EmailField(max_length=100)
     phone_number = models.CharField(max_length=20)
+    gender = models.CharField(max_length=10)
+    dob = models.DateField()
+    ethnic = models.CharField(max_length=20)
+    religion = models.CharField(max_length=30)
+    hometown = models.CharField(max_length=100)
+    degree = models.CharField(max_length=20)
+    title = models.CharField(max_length=20, blank=True)
+    title_detail = models.CharField(max_length=100, blank=True)
+    title_granted_at = models.DateField()
     address = models.CharField(max_length=100)
+    work_position = models.CharField(max_length=100)
     workplace = models.CharField(max_length=100)
-    
-    # Cập nhật: từ ForeignKey -> ManyToManyField
+    # Ngạch viên chức 
+    quota_code = models.CharField(max_length=200)
+    salary_coefficient = models.FloatField()
+    salary_coefficient_granted_at = models.DateField()
+    recruited_at = models.DateField()
+    years_of_experience = models.IntegerField()
+    exp_academic = models.JSONField()
+    exp_language = models.TextField(blank=True)
+    exp_computer = models.TextField(blank=True)
+    exp_work = models.JSONField(blank=True)
+    researches = models.JSONField(blank=True)
+    published_works = models.JSONField(blank=True)
     subjects = models.ManyToManyField('Subject')
-
-    # Thêm recommender (liên kết đến chính model Lecturer)
     recommender = models.ForeignKey(
         'self',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
     )
-
-    active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.name} - {self.workplace}"
