@@ -52,7 +52,7 @@ const DeleteLecturer = () => {
           sx={{ marginLeft: "15px", fontWeight: "bold" }}
           variant="subtitle2"
         >
-          Are you sure that you want to delete this lecturer?
+          Bạn có chắc chắn muốn xóa giảng viên này không?
         </Typography>
       </Box>
       {message.localeCompare("") ? (
@@ -62,8 +62,8 @@ const DeleteLecturer = () => {
         <Box className="formBox" sx={{display: "flex", flexDirection: "column"}} onSubmit={deleteRecord}>
           <Box className="formArea">
             <Typography>
-              You will delete lecturer <strong>{currentLecturer.name}</strong>{" "}
-              who works at <strong>{currentLecturer.workplace}</strong>
+              Bạn sẽ xóa giảng viên <strong>{currentLecturer.name}</strong>{" "}
+              công tác tại <strong>{currentLecturer.workplace}</strong>
             </Typography>
           </Box>
           <Box sx={{ marginTop: "30px" }}>

@@ -27,7 +27,7 @@ const ListLecturer = () => {
     () => [
       {
         accessorKey: "name",
-        header: "Name",
+        header: "Tên",
       },
       {
         accessorKey: "email",
@@ -35,15 +35,15 @@ const ListLecturer = () => {
       },
       {
         accessorKey: "phone_number",
-        header: "Phone Number",
+        header: "Số điện thoại",
       },
       {
-        accessorKey: "address",
-        header: "Address",
+        accessorKey: "workplace",
+        header: "Nơi công tác",
       },
       {
         accessorKey: "subject_names",
-        header: "Subjects",
+        header: "Môn học",
         Cell: ({ cell }) => (
           <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
             {cell.getValue()?.map((char, index) => (
@@ -54,7 +54,12 @@ const ListLecturer = () => {
       },
       {
         accessorKey: "recommender_details.full_name",
-        header: "Recommender",
+        header: "Người giới thiệu",
+        // max length of 10 characters
+        Cell: ({ cell }) => {
+          const value = cell.getValue();
+          return value?.length > 10 ? value.slice(0, 50) + "..." : value;
+        },
       }
     ]
   , []);
@@ -66,13 +71,18 @@ const ListLecturer = () => {
           sx={{ marginLeft: "15px", fontWeight: "bold" }}
           variant="subtitle2"
         >
-          List of lecturers
+          Danh sách giảng viên
         </Typography>
       </Box>
 
       <MaterialReactTable 
         columns={columns}
         data={lecturers}
+        initialState={{ columnVisibility: { 
+          id: false,
+          address: false,
+          "recommender_details.full_name": false,
+        } }}
         enableRowActions
         renderRowActions={
           ({row}) => (

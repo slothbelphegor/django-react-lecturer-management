@@ -27,15 +27,15 @@ const ListSubject = () => {
     () => [
       {
         accessorKey: "name",
-        header: "Name",
+        header: "Tên môn học",
       },
       {
         accessorKey: "credits",
-        header: "Credit",
+        header: "Số tín chỉ",
       },
       {
         accessorKey: "description",
-        header: "Description",
+        header: "Mô tả",
         // max length of 50 characters
         Cell: ({ cell }) => {
           const value = cell.getValue();

@@ -2,7 +2,8 @@ import AxiosInstance from "../../components/AxiosInstance";
 import { React, useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import {format, formatRelative} from "date-fns";
+import { useParams, useNavigate } from "react-router-dom";
 import AddNewIcon from "@mui/icons-material/AddBox";
 import MyTextField from "../../components/forms/MyTextField";
 import MySelectField from "../../components/forms/MySelectField";
@@ -10,24 +11,20 @@ import MyButton from "../../components/forms/MyButton";
 import MyDescriptionField from "../../components/forms/MyDescriptionField";
 import MyMessage from "../../components/Message";
 import MyMultiSelectField from "../../components/forms/MyMultiSelectField";
+import LecturerInfoForm from "../../components/LecturerInfoForm"
 
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 
 const EditLecturer = () => {
   const params = useParams();
   const lecturer_id = params.id;
-  const [subjects, setSubjects] = useState([]);
-  const [lecturers, setLecturers] = useState([]);
   const [currentLecturer, setCurrentLecturer] = useState({});
   const [showMessage, setShowMessage] = useState(false);
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState("");
+  const [lecturers, setLecturers] = useState([]);
 
   const getData = () => {
-    AxiosInstance.get("subjects/").then((res) => {
-      setSubjects(res.data);
-    });
+
     AxiosInstance.get("lecturers/").then((res) => {
       setLecturers(res.data);
     });
@@ -37,47 +34,96 @@ const EditLecturer = () => {
     });
   };
 
-  const schema = yup.object().shape({
-    name: yup.string().required("Name is required"),
-    email: yup
-      .string()
-      .email("Field expected an email address")
-      .required("Email is required"),
-    phone: yup
-      .string()
-      .required("Phone number is required")
-      .matches(/^\+?[0-9]{7,14}$/, "Phone number is not valid"),
-  });
-
-  const resolvedSchema = yupResolver(schema);
-  const { handleSubmit, control } = useForm({
-    resolver: resolvedSchema,
-    values: {
-      name: currentLecturer.name,
-      email: currentLecturer.email,
-      phone: currentLecturer.phone_number,
-      subjects: currentLecturer.subjects,
-      address: currentLecturer.address,
-      recommender: currentLecturer.recommender,
-      workplace: currentLecturer.workplace,
-    },
-  });
-
+  const navigate = useNavigate();
   const submission = (data) => {
-    AxiosInstance.put(`lecturers/${lecturer_id}/`, {
+    console.log("Form submitted with data:", data);
+    const academics = {
+      CN: {
+        school_name: data.school_name_CN,
+        major: data.major_CN,
+        from: format(new Date(data.from_CN), 'yyyy-MM-dd'),
+        to: format(new Date(data.to_CN), 'yyyy-MM-dd'),
+        degree_granted_at: format(new Date(data.degree_granted_at_CN), 'yyyy-MM-dd'),
+      },
+      // include this only when degree is ThS or TS
+      ThS: data.degree === "Thạc sĩ" || data.degree === "Tiến sĩ" ? {
+        school_name: data.school_name_ThS,
+        major: data.major_ThS,
+        from: format(new Date(data.from_ThS), 'yyyy-MM-dd'),
+        to: format(new Date(data.to_ThS), 'yyyy-MM-dd'),
+        degree_granted_at: format(new Date(data.degree_granted_at_ThS), 'yyyy-MM-dd'),
+
+      } : null,
+      TS: data.degree === "Tiến sĩ" ? {
+        school_name: data.school_name_TS,
+        major: data.major_TS,
+        from: format(new Date(data.from_TS), 'yyyy-MM-dd'),
+        to: format(new Date(data.to_TS), 'yyyy-MM-dd'),
+        degree_granted_at: format(new Date(data.degree_granted_at_TS), 'yyyy-MM-dd'),
+      } : null,
+    }
+    
+    const workExperiences = data.workExperiences.map((exp) => ({
+      organization: exp.organization,
+      from: format(new Date(exp.from), 'yyyy-MM-dd'),
+      to: format(new Date(exp.to), 'yyyy-MM-dd'),
+    }));
+
+    const researches = data.researches.map((research) => ({
+      name: research.name,
+      year: research.year,
+      position: research.position,
+      level: research.level,
+    }));
+
+    const publishedWorks = data.publishedWorks.map((work) => ({
+      name: work.name,
+      year: work.year,
+      place: work.place,
+    }));
+
+    console.log(data.recommender);
+    console.log(lecturers.find((lecturer) => lecturer.id === 5));
+
+    const sentData = {
       name: data.name,
       email: data.email,
       phone_number: data.phone,
-      subjects: data.subjects,
+      gender: data.gender,
+      dob: format(new Date(data.dob), 'yyyy-MM-dd'),
+      ethnic: data.ethnic,
+      religion: data.religion,
+      hometown: data.hometown,
+      degree: data.degree,
+      title: data.title,
+      title_detail: data.title_detail,
+      title_granted_at: format(new Date(data.title_granted_at), 'yyyy-MM-dd'),
       address: data.address,
-      recommender: data.recommender,
+      work_position: data.work_position,
       workplace: data.workplace,
-      active: true,
-    })
+      quota_code: data.quota_code === "Khác (nhập cụ thể)" ? data.other_quota_code : data.quota_code,
+      salary_coefficient: data.salary_coefficient,
+      salary_coefficient_granted_at: format(new Date(data.salary_coefficient_granted_at), 'yyyy-MM-dd'),
+      recruited_at: format(new Date(data.recruited_at), 'yyyy-MM-dd'),
+      years_of_experience: data.years_of_experience,
+      exp_language: data.exp_language,
+      exp_computer: data.exp_computer,
+      exp_work: workExperiences,
+      exp_academic: academics,
+      researches: researches,
+      published_works: publishedWorks,
+      subjects: data.subjects,
+      recommender: data.recommender,
+    }
+    console.log("Data to be sent:", sentData);
+    AxiosInstance.put(`lecturers/${lecturer_id}/`, sentData)
       .then((res) => {
-        console.log(res.data);
+        console.log("Response data: ",res.data);
         setIsError(false);
         setMessage("Lecturer updated successfully.");
+        setTimeout(() => {
+          navigate("/lecturers");
+        }, 1500);
       })
       .catch((error) => {
         setMessage("An error occurred while creating the lecturer.");
@@ -103,6 +149,8 @@ const EditLecturer = () => {
           Lecturer details
         </Typography>
       </Box>
+      
+      <LecturerInfoForm lecturer={currentLecturer} submission={submission}/>
       {showMessage ? (
         <MyMessage
           text={message}
@@ -110,72 +158,6 @@ const EditLecturer = () => {
           position={"static"}
         />
       ) : null}
-      <form onSubmit={handleSubmit(submission)}>
-        <Box className="formBox">
-          <Box className="formArea">
-            <MyTextField
-              className="formField"
-              label={"Name"}
-              name="name"
-              control={control}
-            />
-          </Box>
-          <Box className="formArea">
-            <MyTextField
-              className="formField"
-              label={"Email"}
-              name="email"
-              control={control}
-            />
-          </Box>
-          <Box className="formArea">
-            <MyTextField
-              className="formField"
-              label={"Phone"}
-              name="phone"
-              control={control}
-            />
-          </Box>
-          <Box className="formArea">
-            <MySelectField
-              label={"Recommender"}
-              name="recommender"
-              className="formField"
-              options={lecturers}
-              control={control}
-            />
-          </Box>
-          <Box className="formArea">
-            <MyTextField
-              className="formField"
-              label={"Address"}
-              name="address"
-              control={control}
-            />
-          </Box>
-          <Box className="formArea">
-            <MyDescriptionField
-              className="formField"
-              label={"Workplace"}
-              name="workplace"
-              control={control}
-              rows={4}
-            />
-          </Box>
-          <Box className="formArea">
-            <MyMultiSelectField
-              label={"Subjects"}
-              name="subjects"
-              className="formField"
-              options={subjects}
-              control={control}
-            />
-          </Box>
-          <Box className="formArea">
-            <MyButton type="submit" fullWidth label={"Submit"}></MyButton>
-          </Box>
-        </Box>
-      </form>
     </div>
   );
 };

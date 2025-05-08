@@ -23,7 +23,7 @@ class RecommenderSerializer(serializers.ModelSerializer):
 class LecturerSerializer(serializers.ModelSerializer):
     # Store the recommender details in a separate field
     recommender_details = RecommenderSerializer(
-        source='recommender', read_only=True)
+        source='recommender', read_only=True, required=False)
     subject_names = serializers.SerializerMethodField()
 
     class Meta:

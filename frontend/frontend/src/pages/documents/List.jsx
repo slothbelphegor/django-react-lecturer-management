@@ -27,31 +27,31 @@ const ListDocument = () => {
     () => [
       {
         accessorKey: "name",
-        header: "Name",
+        header: "Tên tài liệu",
         size: 250,
       },
       {
         accessorKey: "type",
-        header: "Type",
+        header: "Loại tài liệu",
         size: 40,
       },
       {
         accessorKey: "published_at",
-        header: "Published At",
+        header: "Ngày công bố",
 
       },
       {
         accessorKey: "valid_at",
-        header: "Valid At",
+        header: "Có hiệu lực từ",
         
       },
       {
         accessorKey: "published_by",
-        header: "Published By",
+        header: "Công bố bởi",
       },
       {
         accessorKey: "signed_by",
-        header: "Signed By",
+        header: "Người ký",
         
       },
       
