@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import *
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 User = get_user_model()
 
@@ -19,4 +20,16 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
         
+class GroupSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Group
+    """
+
+    class Meta:
+        """
+        Meta Class
+        """
+
+        model = Group
+        fields = "__all__"
         

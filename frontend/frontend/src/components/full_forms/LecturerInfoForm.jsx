@@ -6,17 +6,17 @@ import AddNewIcon from "@mui/icons-material/AddBox";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InputAdornment from "@mui/material/InputAdornment";
-import MyTextField from "./forms/MyTextField";
-import MyButton from "./forms/MyButton";
-import MyDescriptionField from "./forms/MyDescriptionField";
-import MySelectField from "./forms/MySelectField";
-import MyDateTimeField from "./forms/MyDateTimeField";
-import MyMultiSelectField from "./forms/MyMultiSelectField";
+import MyTextField from "../forms/MyTextField";
+import MyButton from "../forms/MyButton";
+import MyDescriptionField from "../forms/MyDescriptionField";
+import MySelectField from "../forms/MySelectField";
+import MyDateTimeField from "../forms/MyDateTimeField";
+import MyMultiSelectField from "../forms/MyMultiSelectField";
 import MyMessage from "./Message";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useEffect } from "react";
-import AxiosInstance from "./AxiosInstance";
+import AxiosInstance from "../AxiosInstance";
 
 
 export default function LecturerInfoForm( {lecturer, submission} ) {

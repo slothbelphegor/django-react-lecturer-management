@@ -5,12 +5,7 @@ import { useForm } from "react-hook-form";
 import {format, formatRelative} from "date-fns";
 import { useParams, useNavigate } from "react-router-dom";
 import AddNewIcon from "@mui/icons-material/AddBox";
-import MyTextField from "../../components/forms/MyTextField";
-import MySelectField from "../../components/forms/MySelectField";
-import MyButton from "../../components/forms/MyButton";
-import MyDescriptionField from "../../components/forms/MyDescriptionField";
 import MyMessage from "../../components/Message";
-import MyMultiSelectField from "../../components/forms/MyMultiSelectField";
 import LecturerInfoForm from "../../components/LecturerInfoForm"
 
 
@@ -128,7 +123,7 @@ const EditLecturer = () => {
       .catch((error) => {
         setMessage("An error occurred while creating the lecturer.");
         setIsError(true);
-        console.error(error);
+        console.error(error.response.data);
       })
       .finally(() => {
         setShowMessage(true);

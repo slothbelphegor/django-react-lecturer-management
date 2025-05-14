@@ -7,14 +7,18 @@ import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import PeopleIcon from "@mui/icons-material/People";
 import HomeIcon from "@mui/icons-material/Home";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ArchiveIcon from '@mui/icons-material/Archive';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import UploadIcon from '@mui/icons-material/Upload';
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import BookIcon from '@mui/icons-material/Book';
-
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import { Link } from "react-router-dom";
 import AxiosInstance from "./AxiosInstance";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -101,9 +105,34 @@ export default function Menu() {
             to="/subjects/create"
             selected={"/subjects/create" === path}>
             <ListItemIcon>
-              <GroupAddIcon />
+              <BookmarkAddIcon />
             </ListItemIcon>
             <ListItemText primary="Thêm môn học" />
+          </ListItemButton>
+        </List>
+      </Collapse>
+      <ListItemButton 
+        onClick={() => handleClick('evaluations')}
+        component={Link}
+        to="/evaluations"
+        selected={"/evaluations" === path}>
+        <ListItemIcon>
+          <ThumbUpIcon/>
+        </ListItemIcon>
+        <ListItemText primary="Đánh giá" />
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={open == 'evaluations'} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton 
+            sx={{ pl: 4 }}
+            component={Link}
+            to="/evaluations/create"
+            selected={"/evaluations/create" === path}>
+            <ListItemIcon>
+              <AddBoxIcon />
+            </ListItemIcon>
+            <ListItemText primary="Thêm đánh giá" />
           </ListItemButton>
         </List>
       </Collapse>
@@ -129,6 +158,31 @@ export default function Menu() {
               <UploadIcon />
             </ListItemIcon>
             <ListItemText primary="Thêm văn bản" />
+          </ListItemButton>
+        </List>
+      </Collapse>
+      <ListItemButton 
+        onClick={() => handleClick('users')}
+        component={Link}
+        to="/users"
+        selected={"/users" === path}>
+        <ListItemIcon>
+          <AccountBoxIcon />
+        </ListItemIcon>
+        <ListItemText primary="Tài khoản" />
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={open == 'users'} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton 
+            sx={{ pl: 4 }}
+            component={Link}
+            to="/users/create"
+            selected={"/users/create" === path}>
+            <ListItemIcon>
+              <PersonAddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Thêm tài khoản" />
           </ListItemButton>
         </List>
       </Collapse>

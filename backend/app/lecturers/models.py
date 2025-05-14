@@ -50,3 +50,14 @@ class Lecturer(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.workplace}"
+
+class Evaluation(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField(max_length=2000)
+    date = models.DateField()
+    lecturer = models.ForeignKey(Lecturer, on_delete=models.CASCADE)
+    type = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.lecturer.name} - {self.date}"
+    

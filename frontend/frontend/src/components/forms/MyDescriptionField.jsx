@@ -10,7 +10,8 @@ export default function MyDescriptionField(props) {
       control={control}
       defaultValue={""}
       render={({
-        field: { onChange, onBlur, value }
+        field: { onChange, onBlur, value },
+        fieldState: { error }
       }) => (
         <TextField
           id="outlined-multiline-static"
@@ -21,6 +22,8 @@ export default function MyDescriptionField(props) {
           onBlur={onBlur}
           multiline
           rows={rows}
+          error={!!error}
+          helperText={error?.message}
         />
       )}
     />

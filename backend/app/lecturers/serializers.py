@@ -8,6 +8,7 @@ class SubjectSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+
 class RecommenderSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
     class Meta:
@@ -19,7 +20,6 @@ class RecommenderSerializer(serializers.ModelSerializer):
         # Assuming the full name is a combination of first and last name
         return f"{obj.name} - {obj.workplace}"
 
-
 class LecturerSerializer(serializers.ModelSerializer):
     # Store the recommender details in a separate field
     recommender_details = RecommenderSerializer(
@@ -29,6 +29,10 @@ class LecturerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecturer
         fields = "__all__"
-    
     def get_subject_names(self, obj):
         return [subject.name for subject in obj.subjects.all()]
+
+class EvaluationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Evaluation
+        fields = ['id', 'title', 'content', 'date', 'lecturer', 'type']

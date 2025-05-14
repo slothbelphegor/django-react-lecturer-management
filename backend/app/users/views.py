@@ -4,12 +4,13 @@ from .serializers import *
 from .models import *
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model, authenticate
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from knox.models import AuthToken
 
 
 User = get_user_model()
 
-class LoginViewset(viewsets.ViewSet):
+class LoginViewSet(viewsets.ViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = LoginSerializer
     
@@ -33,7 +34,7 @@ class LoginViewset(viewsets.ViewSet):
         return Response(serializer.errors, status=400)   
     
     
-class RegisterViewset(viewsets.ViewSet):
+class RegisterViewSet(viewsets.ViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
@@ -45,7 +46,7 @@ class RegisterViewset(viewsets.ViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
-class UserViewset(viewsets.ViewSet):
+class UserViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
@@ -53,3 +54,19 @@ class UserViewset(viewsets.ViewSet):
         queryset = User.objects.all()
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
+
+class GroupViewSet(viewsets.ModelViewSet):
+    """
+    Model View Set for Group
+    """
+
+    serializer_class = GroupSerializer
+    queryset = Group.objects.all()
+    pagination_class = None
+    permission_classes = [IsAuthenticated, IsAdminUser]
+    lookup_field = "pk"
+    http_method_names = ("get", "post", "patch", "delete")
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, fields=("id", "name"), *args, **kwargs)
+    
