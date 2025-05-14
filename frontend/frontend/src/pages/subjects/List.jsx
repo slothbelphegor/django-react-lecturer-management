@@ -7,6 +7,7 @@ import { Box, Chip, IconButton, Typography } from "@mui/material";
 import CalendarViewMonthIcon from "@mui/icons-material/CalendarViewMonth";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import MyButton from "../../components/forms/MyButton";
 import { MaterialReactTable } from "material-react-table";
 
 const ListSubject = () => {
@@ -46,20 +47,35 @@ const ListSubject = () => {
   , []);
   return (
     <div>
-      <Box className="topbar">
-        <CalendarViewMonthIcon />
-        <Typography
-          sx={{ marginLeft: "15px", fontWeight: "bold" }}
-          variant="subtitle2"
-        >
-          List of subjects
-        </Typography>
+      <Box className="topbar"  sx={{
+        display: "flex",
+        justifyContent: "space-between",
+      }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <CalendarViewMonthIcon />
+          <Typography
+            sx={{ marginLeft: "15px", fontWeight: "bold" }}
+            variant="subtitle2"
+          >
+            Danh sách môn học
+          </Typography>
+        </Box>
+        <Box>
+          <MyButton
+            type="button"
+            label="Thêm môn học"
+            onClick={() => {
+              window.location.href = `/subjects/create`;
+            }}
+          />
+        </Box>
       </Box>
 
       <MaterialReactTable 
         columns={columns}
         data={subjects}
         enableRowActions
+        positionActionsColumn={'last'}
         renderRowActions={
           ({row}) => (
             <Box sx={{ display: "flex", flexWrap: "nowrap", gap: "8px" }}>

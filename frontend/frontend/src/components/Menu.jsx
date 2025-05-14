@@ -9,6 +9,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import HomeIcon from "@mui/icons-material/Home";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ArchiveIcon from '@mui/icons-material/Archive';
+import ScheduleIcon from '@mui/icons-material/Schedule';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import UploadIcon from '@mui/icons-material/Upload';
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
@@ -70,22 +71,7 @@ export default function Menu() {
           <PeopleIcon />
         </ListItemIcon>
         <ListItemText primary="Giảng viên" />
-        {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
-      <Collapse in={open == 'lecturers'} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItemButton 
-            sx={{ pl: 4 }}
-            component={Link}
-            to="/lecturers/create"
-            selected={"/lecturers/create" === path}>
-            <ListItemIcon>
-              <GroupAddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Thêm giảng viên" />
-          </ListItemButton>
-        </List>
-      </Collapse>
       <ListItemButton 
         onClick={() => handleClick('subjects')}
         component={Link}
@@ -95,47 +81,17 @@ export default function Menu() {
           <BookIcon />
         </ListItemIcon>
         <ListItemText primary="Môn học" />
-        {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
-      <Collapse in={open == 'subjects'} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItemButton 
-            sx={{ pl: 4 }}
-            component={Link}
-            to="/subjects/create"
-            selected={"/subjects/create" === path}>
-            <ListItemIcon>
-              <BookmarkAddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Thêm môn học" />
-          </ListItemButton>
-        </List>
-      </Collapse>
       <ListItemButton 
-        onClick={() => handleClick('evaluations')}
+        onClick={() => handleClick('schedules')}
         component={Link}
-        to="/evaluations"
-        selected={"/evaluations" === path}>
+        to="/schedules"
+        selected={"/schedules" === path}>
         <ListItemIcon>
-          <ThumbUpIcon/>
+          <ScheduleIcon />
         </ListItemIcon>
-        <ListItemText primary="Đánh giá" />
-        {open ? <ExpandLess /> : <ExpandMore />}
+        <ListItemText primary="Lịch giảng" />
       </ListItemButton>
-      <Collapse in={open == 'evaluations'} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItemButton 
-            sx={{ pl: 4 }}
-            component={Link}
-            to="/evaluations/create"
-            selected={"/evaluations/create" === path}>
-            <ListItemIcon>
-              <AddBoxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Thêm đánh giá" />
-          </ListItemButton>
-        </List>
-      </Collapse>
       <ListItemButton 
         onClick={() => handleClick('documents')}
         component={Link}
@@ -145,22 +101,7 @@ export default function Menu() {
           <ArchiveIcon />
         </ListItemIcon>
         <ListItemText primary="Văn bản" />
-        {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
-      <Collapse in={open == 'documents'} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItemButton 
-            sx={{ pl: 4 }}
-            component={Link}
-            to="/documents/create"
-            selected={"/documents/create" === path}>
-            <ListItemIcon>
-              <UploadIcon />
-            </ListItemIcon>
-            <ListItemText primary="Thêm văn bản" />
-          </ListItemButton>
-        </List>
-      </Collapse>
       <ListItemButton 
         onClick={() => handleClick('users')}
         component={Link}
@@ -170,22 +111,7 @@ export default function Menu() {
           <AccountBoxIcon />
         </ListItemIcon>
         <ListItemText primary="Tài khoản" />
-        {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
-      <Collapse in={open == 'users'} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItemButton 
-            sx={{ pl: 4 }}
-            component={Link}
-            to="/users/create"
-            selected={"/users/create" === path}>
-            <ListItemIcon>
-              <PersonAddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Thêm tài khoản" />
-          </ListItemButton>
-        </List>
-      </Collapse>
       
       
       <ListItemButton onClick={logoutUser}>

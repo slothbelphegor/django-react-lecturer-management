@@ -1,8 +1,7 @@
 import AxiosInstance from "../../components/AxiosInstance";
 import { React, useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
-import { useForm } from "react-hook-form";
-import {format, formatRelative} from "date-fns";
+import {format} from "date-fns";
 import { useParams, useNavigate } from "react-router-dom";
 import AddNewIcon from "@mui/icons-material/AddBox";
 import MyMessage from "../../components/Message";
@@ -131,7 +130,7 @@ const EditLecturer = () => {
   };
   useEffect(() => {
     getData();
-  }, []); // get data on initial load page
+  }); // get data on initial load page
 
   return (
     <div>
@@ -141,7 +140,7 @@ const EditLecturer = () => {
           sx={{ marginLeft: "15px", fontWeight: "bold" }}
           variant="subtitle2"
         >
-          Lecturer details
+          Lý lịch giảng viên
         </Typography>
       </Box>
       

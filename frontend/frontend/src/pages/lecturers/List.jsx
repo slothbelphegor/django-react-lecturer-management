@@ -72,14 +72,30 @@ const ListLecturer = () => {
   , []);
   return (
     <div>
-      <Box className="topbar">
-        <CalendarViewMonthIcon />
-        <Typography
-          sx={{ marginLeft: "15px", fontWeight: "bold" }}
-          variant="subtitle2"
-        >
-          Danh sách giảng viên
-        </Typography>
+      <Box className="topbar" sx={{
+        display: "flex",
+        justifyContent: "space-between",
+      }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <CalendarViewMonthIcon />
+          <Typography
+            sx={{ marginLeft: "15px", fontWeight: "bold" }}
+            variant="subtitle2"
+          >
+            Danh sách giảng viên
+          </Typography>
+        </Box>
+        <Box>
+          <MyButton
+            type="button"
+            label="Thêm giảng viên"
+            onClick={() => {
+              window.location.href = `/lecturers/create`;
+            }}
+
+          />
+
+        </Box>
       </Box>
 
       <MaterialReactTable 
@@ -88,9 +104,12 @@ const ListLecturer = () => {
         initialState={{ columnVisibility: { 
           id: false,
           address: false,
+          phone_number: false,
+          email: false,
           "recommender_details.full_name": false,
         } }}
         enableRowActions
+        positionActionsColumn={'last'}
         renderRowActions={
           ({row}) => (
             <Box sx={{ display: "flex", flexWrap: "nowrap", gap: "8px" }}>

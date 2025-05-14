@@ -5,6 +5,7 @@ import AxiosInstance from "../../components/AxiosInstance";
 
 import { Box, IconButton, Typography, Grid } from "@mui/material";
 import CalendarViewMonthIcon from "@mui/icons-material/CalendarViewMonth";
+import MyButton from "../../components/forms/MyButton";
 import EditIcon from "@mui/icons-material/Edit";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -60,14 +61,28 @@ const ListDocument = () => {
   );
   return (
     <div>
-      <Box className="topbar">
-        <CalendarViewMonthIcon />
-        <Typography
-          sx={{ marginLeft: "15px", fontWeight: "bold" }}
-          variant="subtitle2"
-        >
-          Documents
-        </Typography>
+      <Box className="topbar"sx={{
+        display: "flex",
+        justifyContent: "space-between",
+      }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <CalendarViewMonthIcon />
+            <Typography
+              sx={{ marginLeft: "15px", fontWeight: "bold" }}
+              variant="subtitle2"
+            >
+              Danh sách văn bản
+            </Typography>
+        </Box>
+        <Box>
+          <MyButton
+            type="button"
+            label="Thêm văn bản"
+            onClick={() => {
+              window.location.href = `/documents/create`;
+            }}
+          />
+        </Box>
       </Box>
 
       <MaterialReactTable
@@ -122,13 +137,13 @@ const ListDocument = () => {
               <Grid item xs={6}>
 
                 <Typography variant="body2">
-                  <strong>Published At:</strong>{" "}
+                  <strong>Ngày xuất bản:</strong>{" "}
                   {row.original.published_at
                     ? new Date(row.original.published_at).toDateString()
                     : "N/A"}
                 </Typography>
                 <Typography variant="body2">
-                  <strong>Valid At:</strong>{" "}
+                  <strong>Ngày có hiệu lực:</strong>{" "}
                   {row.original.valid_at
                     ? new Date(row.original.valid_at).toDateString()
                     : "N/A"}
@@ -136,11 +151,11 @@ const ListDocument = () => {
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="body2">
-                  <strong>Published By:</strong>{" "}
+                  <strong>Công bố bởi:</strong>{" "}
                   {row.original.published_by || "N/A"}
                 </Typography>
                 <Typography variant="body2">
-                  <strong>Signed By:</strong> {row.original.signed_by || "N/A"}
+                  <strong>Người ký:</strong> {row.original.signed_by || "N/A"}
                 </Typography>
               </Grid>
             </Grid>
