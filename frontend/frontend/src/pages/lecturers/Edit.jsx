@@ -5,7 +5,7 @@ import {format} from "date-fns";
 import { useParams, useNavigate } from "react-router-dom";
 import AddNewIcon from "@mui/icons-material/AddBox";
 import MyMessage from "../../components/Message";
-import LecturerInfoForm from "../../components/LecturerInfoForm"
+import LecturerInfoForm from "../../components/full_forms/LecturerInfoForm"
 
 
 const EditLecturer = () => {
@@ -130,7 +130,7 @@ const EditLecturer = () => {
   };
   useEffect(() => {
     getData();
-  }); // get data on initial load page
+  }, []); // get data on initial load page
 
   return (
     <div>

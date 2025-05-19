@@ -61,3 +61,16 @@ class Evaluation(models.Model):
     def __str__(self):
         return f"{self.lecturer.name} - {self.date}"
     
+class Schedule(models.Model):
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    notes = models.CharField(max_length=500, blank=True, null=True)
+    lecturer = models.ForeignKey(Lecturer, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    place = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return f'{self.subject.name} - {self.place}'
+    
+    
+    

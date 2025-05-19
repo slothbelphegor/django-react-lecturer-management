@@ -30,7 +30,7 @@ const ListEvaluation = () => {
 
   useEffect(() => {
     getData();
-  }); // get data on initial load page
+  }, []); // get data on initial load page
 
   const columns = useMemo(
     () => [

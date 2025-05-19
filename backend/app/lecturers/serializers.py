@@ -36,3 +36,19 @@ class EvaluationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evaluation
         fields = ['id', 'title', 'content', 'date', 'lecturer', 'type']
+        
+class ScheduleSerializer(serializers.ModelSerializer):
+    title = serializers.SerializerMethodField()
+    start = serializers.DateTimeField(source='start_time')
+    end = serializers.DateTimeField(source='end_time')
+    classNames = serializers.SerializerMethodField()
+    
+    def get_classNames(self, obj):
+        return obj.subject.name if obj.subject else ""
+    
+    def get_title(self, obj):
+        return str(obj)
+    
+    class Meta:
+        model = Schedule
+        fields = ("id", "start", "end", "title", 'classNames', 'lecturer', 'subject','place','notes')

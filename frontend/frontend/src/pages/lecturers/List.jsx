@@ -8,6 +8,7 @@ import CalendarViewMonthIcon from "@mui/icons-material/CalendarViewMonth";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import MyButton from "../../components/forms/MyButton";
 import { MaterialReactTable } from "material-react-table";
 
@@ -118,6 +119,9 @@ const ListLecturer = () => {
               </IconButton>
               <IconButton color="primary" component={Link} to={`/lecturers/${row.original.id}/evaluations`}>
                 <ThumbUpIcon />
+              </IconButton>
+              <IconButton color="primary" component={Link} to={`/lecturers/${row.original.id}/schedules`}>
+                <CalendarMonthIcon />
               </IconButton>
               <IconButton color="error" component={Link} to={`/lecturers/delete/${row.original.id}`}>
                 <DeleteIcon />

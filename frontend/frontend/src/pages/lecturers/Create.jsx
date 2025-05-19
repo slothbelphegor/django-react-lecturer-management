@@ -1,28 +1,13 @@
 import AxiosInstance from "../../components/AxiosInstance";
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import { Box, Typography, IconButton } from "@mui/material";
-import { useForm, useFieldArray } from "react-hook-form";
 import {format} from "date-fns";
 import AddNewIcon from "@mui/icons-material/AddBox";
-import DeleteIcon from "@mui/icons-material/Delete";
-import InputAdornment from "@mui/material/InputAdornment";
-import MyTextField from "../../components/forms/MyTextField";
-import MySelectField from "../../components/forms/MySelectField";
-import MyButton from "../../components/forms/MyButton";
-import MyDescriptionField from "../../components/forms/MyDescriptionField";
 import MyMessage from "../../components/Message";
-import MyMultiSelectField from "../../components/forms/MyMultiSelectField";
-import LecturerInfoForm from "../../components/LecturerInfoForm"
-
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import MyDateTimeField from "../../components/forms/MyDateTimeField";
+import LecturerInfoForm from "../../components/full_forms/LecturerInfoForm.jsx"
 
 const CreateLecturer = () => {
-  const [subjects, setSubjects] = useState([]);
-  const [lecturers, setLecturers] = useState([]);
   const [showMessage, setShowMessage] = useState(false);
-  const [quotaCode, setQuotaCode] = useState("");
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState("");
 

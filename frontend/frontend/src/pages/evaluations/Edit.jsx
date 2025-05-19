@@ -53,7 +53,7 @@ export default function EditEvaluation() {
 
     useEffect(() => {
         getData();
-    }); // get data on initial load page
+    }, []); // get data on initial load page
 
     return (
         <div>

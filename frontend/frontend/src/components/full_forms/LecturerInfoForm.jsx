@@ -2,7 +2,6 @@ import { React, useState } from "react";
 import { format } from "date-fns";
 import { Box, Typography } from "@mui/material";
 import { useForm, useFieldArray } from "react-hook-form";
-import AddNewIcon from "@mui/icons-material/AddBox";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -12,7 +11,6 @@ import MyDescriptionField from "../forms/MyDescriptionField";
 import MySelectField from "../forms/MySelectField";
 import MyDateTimeField from "../forms/MyDateTimeField";
 import MyMultiSelectField from "../forms/MyMultiSelectField";
-import MyMessage from "./Message";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useEffect } from "react";
@@ -22,10 +20,6 @@ import AxiosInstance from "../AxiosInstance";
 export default function LecturerInfoForm( {lecturer, submission} ) {
     const [subjects, setSubjects] = useState([]);
     const [lecturers, setLecturers] = useState([]);
-    const [showMessage, setShowMessage] = useState(false);
-    const [quotaCode, setQuotaCode] = useState("");
-    const [isError, setIsError] = useState(false);
-    const [message, setMessage] = useState("");
     
     const degreeOptions = [
       { id: 1, value: "Cử nhân", abbreviation: "CN" },
@@ -144,9 +138,6 @@ export default function LecturerInfoForm( {lecturer, submission} ) {
             setSubjects(res.data);
             });
         AxiosInstance.get("lecturers/").then((res) => {
-            const lecturersWithNone = [
-                ...res.data,
-            ];
             setLecturers(res.data);
         });
     };
@@ -315,7 +306,7 @@ export default function LecturerInfoForm( {lecturer, submission} ) {
       });
     
     const resolvedSchema = yupResolver(schema);
-    const { handleSubmit, control, register, getValues, watch, reset, setValue } = useForm({
+    const { handleSubmit, control, register, getValues, watch, reset } = useForm({
         resolver: resolvedSchema,
         defaultValues: {
           degree: degreeOptions[0].value,

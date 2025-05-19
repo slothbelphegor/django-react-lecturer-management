@@ -151,6 +151,71 @@ class EvaluationViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     @action(detail=False, methods=["get"], url_path="by-lecturer/(?P<lecturer_id>[^/.]+)")
+    def get_schedules_by_lecturer(self, request, lecturer_id=None):
+        """
+        Custom action to retrieve all lecturers for a given lecturer ID.
+        """
+        try:
+            schedules = self.queryset.filter(lecturer_id=lecturer_id)
+            serializer = self.serializer_class(schedules, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Schedule.DoesNotExist:
+            return Response(
+                {"error": "Schedule not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+    
+class ScheduleViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerializer
+    
+    def list(self, request):
+        queryset = Schedule.objects.all()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+    
+    def retrieve(self, request, pk=None):
+        try:
+            queryset = self.queryset.get(pk=pk)
+            serializer = self.serializer_class(queryset)
+            return Response(serializer.data)
+        except Schedule.DoesNotExist:
+            return Response({"error": "Schedule not found"}, status=404)
+    
+    def create(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        print(serializer.errors)
+        return Response(serializer.errors, status=400)
+    
+    def update(self, request, pk=None, partial=False):
+        try:
+            subject = self.queryset.get(pk=pk)
+        except Schedule.DoesNotExist:
+            return Response({"error": "Schedule not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serializer_class(subject, data=request.data, partial=partial)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        # Log lỗi nếu có
+        print("Update failed:", serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def destroy(self, request, pk=None):
+        try:
+            subject = self.queryset.get(pk=pk)
+            subject.delete()
+            return Response(status=204)
+        except Schedule.DoesNotExist:
+            return Response({"error": "Subject not found"}, status=404)
+    
+    
+    @action(detail=False, methods=["get"], url_path="by-lecturer/(?P<lecturer_id>[^/.]+)")
     def get_evaluations_by_lecturer(self, request, lecturer_id=None):
         """
         Custom action to retrieve all evaluations for a given lecturer ID.
@@ -164,6 +229,5 @@ class EvaluationViewSet(viewsets.ModelViewSet):
                 {"error": "Lecturer not found"},
                 status=status.HTTP_404_NOT_FOUND,
             )
-    
     
     

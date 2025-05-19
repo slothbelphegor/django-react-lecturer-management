@@ -83,16 +83,6 @@ export default function Menu() {
         <ListItemText primary="Môn học" />
       </ListItemButton>
       <ListItemButton 
-        onClick={() => handleClick('schedules')}
-        component={Link}
-        to="/schedules"
-        selected={"/schedules" === path}>
-        <ListItemIcon>
-          <ScheduleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Lịch giảng" />
-      </ListItemButton>
-      <ListItemButton 
         onClick={() => handleClick('documents')}
         component={Link}
         to="/documents"

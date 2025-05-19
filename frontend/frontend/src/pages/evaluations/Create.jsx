@@ -27,7 +27,7 @@ const CreateEvaluation = () => {
 
   useEffect(() => {
     getData();
-  }); // get data on initial load page
+  }, []); // get data on initial load page
 
 
   const submission = (data) => {

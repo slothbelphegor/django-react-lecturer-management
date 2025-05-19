@@ -27,6 +27,8 @@ import ListEvaluation from './pages/evaluations/List'
 import CreateEvaluation from './pages/evaluations/Create'
 import EditEvaluation from './pages/evaluations/Edit'
 import DeleteEvaluation from './pages/evaluations/Delete'
+import ListSchedule from './pages/schedules/List'
+import ScheduleDetails from './pages/schedules/Details'
 
 
 function App() {
@@ -56,6 +58,8 @@ function App() {
                   <Route path="/lecturers/:id/evaluations/create" element={<CreateEvaluation />}/>
                   <Route path="/lecturers/:id/evaluations/edit/:id" element={<EditEvaluation />}/>
                   <Route path="/lecturers/:id/evaluations/delete/:id" element={<DeleteEvaluation />}/>
+                  <Route path="/lecturers/:id/schedules" element={<ListSchedule />}/>
+                  <Route path="/lecturers/:id/schedules/:id" element={<ScheduleDetails />}/>
                   <Route path="/subjects" element={<ListSubject/>}></Route>
                   <Route path="/subjects/create" element={<CreateSubject/>}></Route>
                   <Route path="/subjects/edit/:id" element={<EditSubject />}/>

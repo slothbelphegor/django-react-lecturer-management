@@ -21,7 +21,7 @@ const DeleteEvaluation = () => {
   };
   useEffect(() => {
     getData();
-  }); // get data on initial load page
+  }, []); // get data on initial load page
 
   const deleteRecord = (event) => {
     event.preventDefault();

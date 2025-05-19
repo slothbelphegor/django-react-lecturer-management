@@ -22,7 +22,10 @@ const MenuProps = {
 };
 
 export default function MyMultiSelectField(props) {
-  const { label, name, control, options } = props
+  const { label, name, control, options, 
+    onChange: customOnChange, selectedValues } = props
+  
+
 
   return (
     <Controller
@@ -41,8 +44,11 @@ export default function MyMultiSelectField(props) {
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={value}
-              onChange={onChange}
+              value={selectedValues !== undefined ? selectedValues : value}
+              onChange={(e) => {
+                onChange(e); // Update form state
+                if (customOnChange) customOnChange(e); // Call custom handler if provided
+              }}
               onBlur={onBlur}
               error={!!error}
               input={<OutlinedInput id="select-multiple-chip" label={label} />}
