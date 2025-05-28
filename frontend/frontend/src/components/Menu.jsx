@@ -10,16 +10,14 @@ import HomeIcon from "@mui/icons-material/Home";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import ScheduleIcon from '@mui/icons-material/Schedule';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import UploadIcon from '@mui/icons-material/Upload';
-import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from "@mui/icons-material/Logout";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import BookIcon from '@mui/icons-material/Book';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import PersonIcon from '@mui/icons-material/Person';
+import InfoIcon from '@mui/icons-material/Info';
 import { Link } from "react-router-dom";
 import AxiosInstance from "./AxiosInstance";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -37,6 +35,7 @@ export default function Menu() {
     AxiosInstance.post("logout/", {})
       .then(() => {
         localStorage.removeItem("Token");
+        localStorage.removeItem("Role")
         navigate("/login");
       })
       .catch((error) => {
@@ -61,7 +60,44 @@ export default function Menu() {
         </ListItemIcon>
         <ListItemText primary={"Trang chủ"} />
       </ListItemButton>
-      
+      <ListItemButton  onClick={()=>handleClick("me")}>
+        <ListItemIcon>
+          <PersonIcon />
+        </ListItemIcon>
+        <ListItemText primary={"Về bản thân"} />
+        {open == "me" ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={open == "me"} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton  component={Link} to="/my_info" selected={"/my_info" === path} sx={{ pl: 4 }}>
+            <ListItemIcon>
+              <InfoIcon />
+            </ListItemIcon>
+            <ListItemText primary="Lý lịch" />
+          </ListItemButton>
+
+          <ListItemButton component={Link} to="/my_evaluations" selected={"/my_evaluations" === path} sx={{ pl: 4 }}>
+            <ListItemIcon>
+              <ThumbUpIcon />
+            </ListItemIcon>
+            <ListItemText primary="Đánh giá" />
+          </ListItemButton>
+
+          <ListItemButton component={Link} to="/my_schedules" selected={"/my_schedules" === path} sx={{ pl: 4 }}>
+            <ListItemIcon>
+              <ScheduleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Lịch giảng" />
+          </ListItemButton>
+          <ListItemButton component={Link} to="/my_account" selected={"/my_account" === path} sx={{ pl: 4 }}>
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Tài khoản" />
+          </ListItemButton>
+
+        </List>
+      </Collapse>
       <ListItemButton 
         onClick={() => handleClick('lecturers')}
         component={Link}

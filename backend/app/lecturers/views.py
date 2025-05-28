@@ -4,8 +4,15 @@ from .serializers import *
 from .models import *
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from .permissions import *
 
 # Create your views here.
+
+class LecturerStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lecturer
+        fields = ['status']
 
 
 class LecturerViewSet(viewsets.ModelViewSet):
@@ -51,7 +58,35 @@ class LecturerViewSet(viewsets.ModelViewSet):
             return Response(status=204)
         except Lecturer.DoesNotExist:
             return Response({"error": "Lecturer not found"}, status=404)
+        
+    @action(detail=False, methods=['get', 'put', 'patch'], permission_classes=[IsAuthenticated])
+    def me(self, request):
+        try:
+            lecturer = Lecturer.objects.get(user=request.user)
+        except Lecturer.DoesNotExist:
+            return Response({"error": "Lecturer not found"}, status=404)
 
+        if request.method in ['PUT', 'PATCH']:
+            serializer = self.get_serializer(lecturer, data=request.data, partial=(request.method == 'PATCH'))
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=400)
+        else:
+            serializer = self.get_serializer(lecturer)
+            return Response(serializer.data)
+    
+    @action(detail=True, methods=['patch'], permission_classes=[IsAuthenticated, CanEditLecturerStatus])
+    def update_status(self, request, pk=None):
+        try:
+            lecturer = Lecturer.objects.get(pk=pk)
+        except Lecturer.DoesNotExist:
+            return Response({"error": "Lecturer not found"}, status=404)
+        serializer = LecturerStatusSerializer(lecturer, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
 
 class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all()
@@ -140,30 +175,41 @@ class EvaluationViewSet(viewsets.ModelViewSet):
         # Log lỗi nếu có
         print("Update failed:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework import status
 
-class EvaluationViewSet(viewsets.ModelViewSet):
-    queryset = Evaluation.objects.all()
-    serializer_class = EvaluationSerializer
-    permission_classes = [permissions.AllowAny]
-
-    @action(detail=False, methods=["get"], url_path="by-lecturer/(?P<lecturer_id>[^/.]+)")
-    def get_schedules_by_lecturer(self, request, lecturer_id=None):
-        """
-        Custom action to retrieve all lecturers for a given lecturer ID.
-        """
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def me(self, request):
         try:
-            schedules = self.queryset.filter(lecturer_id=lecturer_id)
-            serializer = self.serializer_class(schedules, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Schedule.DoesNotExist:
-            return Response(
-                {"error": "Schedule not found"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+            lecturer = Lecturer.objects.get(user=request.user)
+        except Lecturer.DoesNotExist:
+            return Response({"error": "Lecturer not found"}, status=404)
+        evaluations = self.queryset.all()
+        serializer = self.serializer_class(evaluations, many=True)
+        return Response(serializer.data)
+    
+    
+# from rest_framework.decorators import action
+# from rest_framework.response import Response
+# from rest_framework import status
+
+# class EvaluationViewSet(viewsets.ModelViewSet):
+#     queryset = Evaluation.objects.all()
+#     serializer_class = EvaluationSerializer
+#     permission_classes = [permissions.AllowAny]
+
+#     @action(detail=False, methods=["get"], url_path="by-lecturer/(?P<lecturer_id>[^/.]+)")
+#     def get_schedules_by_lecturer(self, request, lecturer_id=None):
+#         """
+#         Custom action to retrieve all lecturers for a given lecturer ID.
+#         """
+#         try:
+#             schedules = self.queryset.filter(lecturer_id=lecturer_id)
+#             serializer = self.serializer_class(schedules, many=True)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         except Schedule.DoesNotExist:
+#             return Response(
+#                 {"error": "Schedule not found"},
+#                 status=status.HTTP_404_NOT_FOUND,
+#             )
     
 class ScheduleViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
@@ -216,18 +262,26 @@ class ScheduleViewSet(viewsets.ModelViewSet):
     
     
     @action(detail=False, methods=["get"], url_path="by-lecturer/(?P<lecturer_id>[^/.]+)")
-    def get_evaluations_by_lecturer(self, request, lecturer_id=None):
-        """
-        Custom action to retrieve all evaluations for a given lecturer ID.
-        """
+    def get_schedules_by_lecturer(self, request, lecturer_id=None):
         try:
-            evaluations = self.queryset.filter(lecturer_id=lecturer_id)
-            serializer = self.serializer_class(evaluations, many=True)
+            schedules = self.queryset.filter(lecturer_id=lecturer_id)
+            serializer = self.serializer_class(schedules, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Lecturer.DoesNotExist:
             return Response(
                 {"error": "Lecturer not found"},
                 status=status.HTTP_404_NOT_FOUND,
             )
+    
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def me(self, request):
+        try:
+            lecturer = Lecturer.objects.get(user=request.user)
+        except Lecturer.DoesNotExist:
+            return Response({"error": "Lecturer not found"}, status=404)
+        schedules = self.queryset.filter(lecturer=lecturer)
+        serializer = self.get_serializer(schedules, many=True)
+        return Response(serializer.data)
+    
     
     

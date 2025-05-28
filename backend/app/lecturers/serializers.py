@@ -25,7 +25,7 @@ class LecturerSerializer(serializers.ModelSerializer):
     recommender_details = RecommenderSerializer(
         source='recommender', read_only=True, required=False)
     subject_names = serializers.SerializerMethodField()
-
+    
     class Meta:
         model = Lecturer
         fields = "__all__"

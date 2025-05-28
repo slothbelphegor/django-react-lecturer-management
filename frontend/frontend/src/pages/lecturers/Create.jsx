@@ -75,6 +75,8 @@ const CreateLecturer = () => {
       published_works: data.publishedWorks,
       subjects: data.subjects,
       recommender: data.recommender,
+      status: data.status,
+      user: null
     }
     console.log("Data to be sent:", sentData);
     AxiosInstance.post("lecturers/",sentData)

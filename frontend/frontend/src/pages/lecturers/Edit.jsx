@@ -108,6 +108,7 @@ const EditLecturer = () => {
       published_works: publishedWorks,
       subjects: data.subjects,
       recommender: data.recommender,
+      status: data.status
     }
     console.log("Data to be sent:", sentData);
     AxiosInstance.put(`lecturers/${lecturer_id}/`, sentData)

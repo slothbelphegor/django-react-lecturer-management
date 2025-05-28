@@ -16,8 +16,7 @@ import * as yup from "yup";
 import { useEffect } from "react";
 import AxiosInstance from "../AxiosInstance";
 
-
-export default function LecturerInfoForm( {lecturer, submission} ) {
+export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer} ) {
     const [subjects, setSubjects] = useState([]);
     const [lecturers, setLecturers] = useState([]);
     
@@ -126,6 +125,14 @@ export default function LecturerInfoForm( {lecturer, submission} ) {
       },
       { id: "quota28", value: "Khác (nhập cụ thể)" },
     ];
+
+    const statusOptions = [
+      {id: "status1", value: "Chưa duyệt hồ sơ"},
+      {id: "status2", value: "Hồ sơ hợp lệ"},
+      {id: "status3", value: "Hồ sơ bị từ chối"},
+      {id: "status5", value: "Đã ký hợp đồng"},
+      {id: "status6", value: "Đã hết hạn hợp đồng"}
+    ]
 
     const recommenderOptions = lecturers.map((lecturer) => ({
       id: lecturer.id,
@@ -373,6 +380,7 @@ export default function LecturerInfoForm( {lecturer, submission} ) {
           recommender: lecturer.recommender
             ? recommenderOptions.find((option) => option.id === lecturer.recommender)?.value || ""
             : "",
+          status: lecturer.status,
         };
         console.log(formValues.recommender);
         // Add experience work fields dynamically
@@ -1233,6 +1241,27 @@ export default function LecturerInfoForm( {lecturer, submission} ) {
               control={control}
             />
           </Box>
+          {isSelfLecturer ? 
+          <Box className="formArea" sx={{ width: "100%" }}>
+            <MyTextField
+              label={"Tình trạng hồ sơ/hợp đồng"}
+              name="status"
+              className="formField"
+              control={control}
+              disabled={true}
+            />
+          </Box>
+          : <Box className="formArea" sx={{ width: "100%" }}>
+            <MySelectField
+              label={"Tình trạng hồ sơ/hợp đồng"}
+              name="status"
+              className="formField"
+              options={statusOptions}
+              control={control}
+            />
+          </Box>
+          }
+          
           <Box className="formArea" sx={{ width: "100%" }}>
             <MyMultiSelectField
               sx={{ width: "100%" }}
@@ -1243,6 +1272,7 @@ export default function LecturerInfoForm( {lecturer, submission} ) {
               control={control}
             />
           </Box>
+          
         </Box>
 
         <Box

@@ -5,27 +5,27 @@ import AxiosInstance from "../../components/AxiosInstance";
 
 import { Box, Chip, IconButton, Typography } from "@mui/material";
 import CalendarViewMonthIcon from "@mui/icons-material/CalendarViewMonth";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import MyButton from "../../components/forms/MyButton";
 import { MaterialReactTable } from "material-react-table";
 
 const ListLecturer = () => {
   const [lecturers, setLecturers] = useState([]);
   
+  // Su dung Axios lay du lieu tu backend
   const getData = () => {
     AxiosInstance.get("lecturers/").then((res) => {
       setLecturers(res.data);
     });
   };
-
+  // Lay du lieu ngay khi tai trang
   useEffect(() => {
-          getData();
-      }, []) // get data on initial load page
-  
-
+    getData();
+  }, []); 
+  // Khai bao cac cot của bang
   const columns = useMemo(
     () => [
       {
@@ -68,15 +68,19 @@ const ListLecturer = () => {
           const value = cell.getValue();
           return value?.length > 10 ? value.slice(0, 50) + "..." : value;
         },
-      }
-    ]
-  , []);
+      },
+    ],
+    []
+  );
   return (
     <div>
-      <Box className="topbar" sx={{
-        display: "flex",
-        justifyContent: "space-between",
-      }}>
+      <Box
+        className="topbar"
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <CalendarViewMonthIcon />
           <Typography
@@ -93,43 +97,55 @@ const ListLecturer = () => {
             onClick={() => {
               window.location.href = `/lecturers/create`;
             }}
-
           />
-
         </Box>
       </Box>
-
-      <MaterialReactTable 
+      <MaterialReactTable
         columns={columns}
-        data={lecturers}
-        initialState={{ columnVisibility: { 
-          id: false,
-          address: false,
-          phone_number: false,
-          email: false,
-          "recommender_details.full_name": false,
-        } }}
+        data={lecturers} // Nap du lieu vao bang
+        initialState={{
+          columnVisibility: {
+            id: false,
+            address: false,
+            phone_number: false,
+            email: false,
+            "recommender_details.full_name": false,
+          },
+        }}
         enableRowActions
-        positionActionsColumn={'last'}
-        renderRowActions={
-          ({row}) => (
-            <Box sx={{ display: "flex", flexWrap: "nowrap", gap: "8px" }}>
-              <IconButton color="primary" component={Link} to={`/lecturers/edit/${row.original.id}`}>
-                <EditIcon />
-              </IconButton>
-              <IconButton color="primary" component={Link} to={`/lecturers/${row.original.id}/evaluations`}>
-                <ThumbUpIcon />
-              </IconButton>
-              <IconButton color="primary" component={Link} to={`/lecturers/${row.original.id}/schedules`}>
-                <CalendarMonthIcon />
-              </IconButton>
-              <IconButton color="error" component={Link} to={`/lecturers/delete/${row.original.id}`}>
-                <DeleteIcon />
-              </IconButton>
-              
-            </Box>
-          )
-        }
+        positionActionsColumn={"last"}
+        renderRowActions={({ row }) => (
+          <Box sx={{ display: "flex", flexWrap: "nowrap", gap: "8px" }}>
+            <IconButton
+              color="primary"
+              component={Link}
+              to={`/lecturers/edit/${row.original.id}`}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              color="primary"
+              component={Link}
+              to={`/lecturers/${row.original.id}/evaluations`}
+            >
+              <ThumbUpIcon />
+            </IconButton>
+            <IconButton
+              color="primary"
+              component={Link}
+              to={`/lecturers/${row.original.id}/schedules`}
+            >
+              <CalendarMonthIcon />
+            </IconButton>
+            <IconButton
+              color="error"
+              component={Link}
+              to={`/lecturers/delete/${row.original.id}`}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        )}
         enableExpanding
         renderDetailPanel={({ row }) => (
           <Box sx={{ padding: 2, display: "flex", flexDirection: "column" }}>
@@ -150,7 +166,6 @@ const ListLecturer = () => {
               <strong>Môn học:</strong> {row.original.subject_names.join(", ")}
             </Typography>
           </Box>
-          
         )}
       />
     </div>

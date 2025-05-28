@@ -1,5 +1,5 @@
 from django.db import models
-
+from users.models import CustomUser
 # Create your models here.
 
 
@@ -34,7 +34,7 @@ class Lecturer(models.Model):
     salary_coefficient_granted_at = models.DateField()
     recruited_at = models.DateField()
     years_of_experience = models.IntegerField()
-    exp_academic = models.JSONField()
+    exp_academic = models.JSONField(blank=True)
     exp_language = models.TextField(blank=True)
     exp_computer = models.TextField(blank=True)
     exp_work = models.JSONField(blank=True)
@@ -47,7 +47,9 @@ class Lecturer(models.Model):
         null=True,
         blank=True,
     )
-
+    user = models.OneToOneField(CustomUser, null=True, blank=True, on_delete=models.SET_NULL)
+    status = models.CharField(db_default="Chưa được duyệt", max_length=100)
+  
     def __str__(self):
         return f"{self.name} - {self.workplace}"
 

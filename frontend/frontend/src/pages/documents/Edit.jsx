@@ -73,7 +73,6 @@ const EditDocument = () => {
       published_by: currentDocument.published_by,
       signed_by: currentDocument.signed_by,
     },
-
   });
 
   const submission = (data) => {

@@ -34,8 +34,9 @@ const Login = () => {
         }).then((response) => {
             // What to do after the request
             console.log(response)
-            // Store the token in localStorage
+            // Store the token and role in localStorage
             localStorage.setItem("Token", response.data.token)
+            localStorage.setItem("Role", response.data.user.group)
             // Redirect to the home page
             navigate(`/`)
         }).catch((error) => {

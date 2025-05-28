@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import AxiosInstance from "../../components/AxiosInstance";
 
 import { Box, IconButton, Typography, Grid } from "@mui/material";
@@ -17,12 +17,11 @@ import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns-tz";
-import { isSameDay, addDays, isAfter, isBefore, parseISO, getDay } from "date-fns";
+import { isSameDay, addDays, isAfter, isBefore, getDay, isEqual } from "date-fns";
 import { WindowScrollController } from "@fullcalendar/core/internal";
 
 const ListSchedule = () => {
   const params = useParams();
-  const navigate = useNavigate();
   const lecturer_id = params.id;
 
   const [currentLecturer, setCurrentLecturer] = useState({});
@@ -71,7 +70,14 @@ const ListSchedule = () => {
     getData();
   }, []); // get data on initial load page
 
-  const { control, reset } = useForm({});
+  const filteredSchedules = schedules.filter(
+    (schedule) =>
+      selectedSubjects.includes(schedule.classNames) &&
+      (!fromDate || isAfter(schedule.start, fromDate) || isEqual(schedule.start, fromDate)) &&
+      (!toDate || isBefore(schedule.end, toDate) || isEqual(schedule.end, fromDate))
+  );
+
+  const { control } = useForm({});
 
   // Hàm tạo màu từ tên
   const stringToColor = (str) => {
@@ -89,12 +95,7 @@ const ListSchedule = () => {
     name: subject.name,
   }));
 
-  const filteredSchedules = schedules.filter(
-    (schedule) =>
-      selectedSubjects.includes(schedule.classNames) &&
-      (!fromDate || isAfter(schedule.start, fromDate)) &&
-      (!toDate || isBefore(schedule.end, toDate))
-  );
+  
 
   console.log(filteredSchedules);
 
@@ -114,7 +115,6 @@ const ListSchedule = () => {
     // Generate all matching dates
     let current = fromDate;
     const schedulesToCreate = [];
- 
     while (!isAfter(current, toDate) || current == toDate) {
       console.log(current);
       if (current.getDay() === weekday) {
@@ -140,7 +140,6 @@ const ListSchedule = () => {
       }
       current = addDays(current, 7);
     }
-    console.log(schedulesToCreate);
     // Send all schedules to backend (batch or one by one)
     Promise.all(
       schedulesToCreate.map((schedule) =>
@@ -219,9 +218,6 @@ const ListSchedule = () => {
     const toDate = data.to_date;
     const weekday = fromDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
-    // Parse times
-    const [startHour, startMinute] = data.start.split(":").map(Number);
-    const [endHour, endMinute] = data.end.split(":").map(Number);
 
     // Find all schedules to update
     const schedulesToDelete = schedules.filter((schedule) => {
@@ -311,13 +307,7 @@ const ListSchedule = () => {
           </Typography>
         </Box>
         <Box>
-          <MyButton
-            type="button"
-            label="Thêm lịch giảng"
-            onClick={() => {
-              window.location.href = `/lecturers/${lecturer_id}/schedules/create`;
-            }}
-          />
+
         </Box>
       </Box>
       <MyModal
@@ -401,6 +391,10 @@ const ListSchedule = () => {
           snapDuration="00:15:00"
           slotLabelInterval="01:00"
           slotMinTime="07:00:00"
+          validRange={{
+            start: fromDate,
+            end: toDate,
+          }}
         />
       </Box>
     </div>

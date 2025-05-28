@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { Controller } from 'react-hook-form'
 
 export default function MyTextField(props) {
-    const { label, name, control, slotProps, sx } = props
+    const { label, name, control, slotProps, sx, disabled } = props
     return (
         <Controller
             name={name}
@@ -25,6 +25,7 @@ export default function MyTextField(props) {
                     slotProps={slotProps}
                     value={value}
                     error={!!error}
+                    disabled={disabled}
                     helperText={error?.message}
                 />
             )

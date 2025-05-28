@@ -7,13 +7,14 @@ import MyButton from "../../components/forms/MyButton";
 import MyMessage from "../../components/Message";
 
 const DeleteDocument = () => {
-  const params = useParams();
   const navigate = useNavigate();
-  const document_id = params.id;
   const [currentDocument, setCurrentDocument] = useState({});
   const [showMessage, setShowMessage] = useState(false);
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState("");
+  
+  const params = useParams();
+  const document_id = params.id;
   const getData = () => {
     AxiosInstance.get(`document/${document_id}/`).then((res) => {
       setCurrentDocument(res.data);

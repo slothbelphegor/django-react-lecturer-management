@@ -3,6 +3,7 @@ from rest_framework import viewsets, permissions
 from .serializers import *
 from .models import *
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from knox.models import AuthToken
@@ -27,6 +28,7 @@ class LoginViewSet(viewsets.ViewSet):
                     'user': {
                     'username': user.username,
                     'email': user.email,
+                    'group': user.groups.first().name if user.groups.exists() else None
                 },
                 'token': token
                 })
@@ -52,7 +54,67 @@ class UserViewSet(viewsets.ViewSet):
     serializer_class = RegisterSerializer
     def list(self, request):
         queryset = User.objects.all()
-        serializer = self.serializer_class(queryset, many=True)
+        serializer = NewUserSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    def create(self, request):
+        serializer = NewUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    
+    def retrieve(self, request, pk=None):
+        try:
+            queryset = self.queryset.get(pk=pk)
+            serializer = NewUserSerializer(queryset)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response({"error": "Evaluation not found"}, status=404)
+    
+    def update(self, request, pk=None):
+        try:
+            evaluation = self.queryset.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"error": "user not found"}, status=404)
+
+        serializer = self.serializer_class(evaluation, data=request.data, partial=(request.method == 'PATCH'))
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        # Log lỗi nếu có
+        print("Update failed:", serializer.errors)
+        return Response(serializer.errors, status=400)
+    
+    def partial_update(self, request, pk=None):
+        try:
+            user = self.queryset.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"error": "user not found"}, status=404)
+
+        serializer = NewUserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        print("Update failed:", serializer.errors)
+        return Response(serializer.errors, status=400)
+    
+    def destroy(self, request, pk=None):
+        try:
+            user = self.queryset.get(pk=pk)
+            user.delete()
+            return Response(status=204)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=404)
+    
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def me(self, request):
+        try:
+            user = User.objects.get(id=request.user.id)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=404)
+        serializer = self.serializer_class(user)
         return Response(serializer.data)
 
 class GroupViewSet(viewsets.ModelViewSet):

@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import { Controller } from 'react-hook-form';
 
 export default function MyDescriptionField(props) {
-  const { label, rows, name, control } = props
+  const { label, rows, name, control, disabled } = props
   return (
     <Controller
       name={name}
@@ -22,6 +22,7 @@ export default function MyDescriptionField(props) {
           onBlur={onBlur}
           multiline
           rows={rows}
+          disabled={disabled}
           error={!!error}
           helperText={error?.message}
         />

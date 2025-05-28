@@ -28,6 +28,7 @@ export default function ScheduleInfoForm({
   notes,
   hasDeleteButton,
   deleteSubmission,
+  viewFromSelf,
 }) {
   console.log(subjects);
   const subjectOptions = subjects.map((subject) => ({
@@ -63,85 +64,146 @@ export default function ScheduleInfoForm({
   const { handleSubmit, control, register, getValues, watch, reset } = useForm({
     resolver: resolvedSchema,
   });
-  return (
-    <form
-      onSubmit={handleSubmit(submission, (errors) =>
-        console.log("Validation Errors:", errors)
-      )}
-    >
+  if (viewFromSelf) {
+    return (
       <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        <Box>
-          <MySelectField
-            className="formField"
-            label={"Môn học"}
-            name="subject"
-            control={control}
-            options={subjectOptions}
-          />
-        </Box>
-        <Box>
-          <MyDateTimeField
-            type="time"
-            className="formField"
-            label={"Giờ bắt đầu"}
-            name="start"
-            control={control}
-          />
-        </Box>
-        <Box>
-          <MyDateTimeField
-            type="time"
-            className="formField"
-            label={"Giờ kết thúc"}
-            name="end"
-            control={control}
-          />
-        </Box>
-        <Box>
-          <MyDateTimeField
-            type="date"
-            className="formField"
-            label={"Từ ngày"}
-            name="from_date"
-            control={control}
-          />
-        </Box>
-        <Box>
-          <MyDateTimeField
-            type="date"
-            className="formField"
-            label={"Đến ngày"}
-            name="to_date"
-            control={control}
-          />
-        </Box>
-        <Box>
-          <MyTextField
-            className="formField"
-            label={"Phòng dạy"}
-            name="place"
-            control={control}
-          />
-        </Box>
-        <Box>
-          <MyDescriptionField
-            className="formField"
-            label={"Ghi chú"}
-            name="notes"
-            control={control}
-            rows={2}
-          />
-        </Box>
+          <Box>
+            <MyTextField
+              className="formField"
+              label={"Môn học"}
+              name="subject"
+              control={control}
+              disabled={true}
 
-        <Box>
-          <MyButton type="submit" fullWidth label={"Submit"}></MyButton>
+            />
+          </Box>
+          <Box>
+            <MyTextField
+              type="time"
+              className="formField"
+              label={"Giờ bắt đầu"}
+              name="start"
+              control={control}
+              disabled={true}
+            />
+          </Box>
+          <Box>
+            <MyTextField
+              type="time"
+              className="formField"
+              label={"Giờ kết thúc"}
+              name="end"
+              control={control}
+              disabled={true}
+            />
+          </Box>
+          
+          <Box>
+            <MyTextField
+              className="formField"
+              label={"Phòng dạy"}
+              name="place"
+              control={control}
+              disabled={true}
+            />
+          </Box>
+          <Box>
+            <MyDescriptionField
+              className="formField"
+              label={"Ghi chú"}
+              name="notes"
+              control={control}
+              rows={2}
+              disabled={true}
+            />
+          </Box>
+
         </Box>
-        {hasDeleteButton ? (
-          <MyButton type={"button"} label={"Delete"} 
-          sx={{backgroundColor: "red"}} 
-          onClick={handleSubmit(deleteSubmission)}/>
-        ) : null}
-      </Box>
-    </form>
-  );
+    );
+  } else {
+    return (
+      <form
+        onSubmit={handleSubmit(submission, (errors) =>
+          console.log("Validation Errors:", errors)
+        )}
+      >
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <Box>
+            <MySelectField
+              className="formField"
+              label={"Môn học"}
+              name="subject"
+              control={control}
+              options={subjectOptions}
+            />
+          </Box>
+          <Box>
+            <MyDateTimeField
+              type="time"
+              className="formField"
+              label={"Giờ bắt đầu"}
+              name="start"
+              control={control}
+            />
+          </Box>
+          <Box>
+            <MyDateTimeField
+              type="time"
+              className="formField"
+              label={"Giờ kết thúc"}
+              name="end"
+              control={control}
+            />
+          </Box>
+          <Box>
+            <MyDateTimeField
+              type="date"
+              className="formField"
+              label={"Từ ngày"}
+              name="from_date"
+              control={control}
+            />
+          </Box>
+          <Box>
+            <MyDateTimeField
+              type="date"
+              className="formField"
+              label={"Đến ngày"}
+              name="to_date"
+              control={control}
+            />
+          </Box>
+          <Box>
+            <MyTextField
+              className="formField"
+              label={"Phòng dạy"}
+              name="place"
+              control={control}
+            />
+          </Box>
+          <Box>
+            <MyDescriptionField
+              className="formField"
+              label={"Ghi chú"}
+              name="notes"
+              control={control}
+              rows={2}
+            />
+          </Box>
+
+          <Box>
+            <MyButton type="submit" fullWidth label={"Submit"}></MyButton>
+          </Box>
+          {hasDeleteButton ? (
+            <MyButton
+              type={"button"}
+              label={"Delete"}
+              sx={{ backgroundColor: "red" }}
+              onClick={handleSubmit(deleteSubmission)}
+            />
+          ) : null}
+        </Box>
+      </form>
+    );
+  }
 }

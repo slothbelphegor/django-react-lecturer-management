@@ -29,6 +29,14 @@ import EditEvaluation from './pages/evaluations/Edit'
 import DeleteEvaluation from './pages/evaluations/Delete'
 import ListSchedule from './pages/schedules/List'
 import ScheduleDetails from './pages/schedules/Details'
+import MyInfo from './pages/lecturers/MyInfo'
+import MyEvaluations from './pages/evaluations/MyEvaluations'
+import MySchedules from './pages/schedules/MySchedules'
+import MyAccount from './pages/auth/MyAccount'
+import ListUser from './pages/users/List'
+import EditUser from './pages/users/Edit'
+import DeleteUser from './pages/users/Delete'
+import CreateUser from './pages/users/Create'
 
 
 function App() {
@@ -68,6 +76,14 @@ function App() {
                   <Route path="/documents/create" element={<CreateDocument/>}></Route>
                   <Route path="/documents/delete/:id" element={<DeleteDocument />}/>
                   <Route path="/documents/edit/:id" element={<EditDocument />}/>
+                  <Route path="/users" element={<ListUser />}/>
+                  <Route path="/users/create" element={<CreateUser />}/>
+                  <Route path="/users/edit/:id" element={<EditUser />}/>
+                  <Route path="/users/delete/:id" element={<DeleteUser />}/>
+                  <Route path="/my_info" element={<MyInfo />}/>
+                  <Route path="/my_evaluations" element={<MyEvaluations/>}/>
+                  <Route path="/my_schedules" element={<MySchedules/>}/>
+                  <Route path="/my_account" element={<MyAccount/>}/>
                 </Route>
               </Routes>
             }
