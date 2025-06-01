@@ -22,7 +22,7 @@ const MenuProps = {
 };
 
 export default function MyMultiSelectField(props) {
-  const { label, name, control, options, 
+  const { label, name, control, options, disabled,
     onChange: customOnChange, selectedValues } = props
   
 
@@ -40,7 +40,7 @@ export default function MyMultiSelectField(props) {
           <FormControl sx={{ m: 1, width: "100%" }}>
             <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
             <Select
-              
+              disabled={disabled}
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple

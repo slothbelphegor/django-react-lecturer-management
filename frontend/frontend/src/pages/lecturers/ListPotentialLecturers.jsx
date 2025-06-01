@@ -13,12 +13,12 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import MyButton from "../../components/forms/MyButton";
 import { MaterialReactTable } from "material-react-table";
 
-const ListLecturer = () => {
+const ListPotentialLecturer = () => {
   const [lecturers, setLecturers] = useState([]);
   
   // Su dung Axios lay du lieu tu backend
   const getData = () => {
-    AxiosInstance.get("lecturers/").then((res) => {
+    AxiosInstance.get("lecturers/potential_lecturers/").then((res) => {
       setLecturers(res.data);
     });
   };
@@ -62,6 +62,10 @@ const ListLecturer = () => {
         ),
       },
       {
+        'accessorKey': "status",
+        'header': "Tình trạng hồ sơ"
+      },
+      {
         accessorKey: "recommender_details.full_name",
         header: "Người giới thiệu",
         // max length of 10 characters
@@ -91,15 +95,6 @@ const ListLecturer = () => {
             Danh sách giảng viên
           </Typography>
         </Box>
-        <Box>
-          <MyButton
-            type="button"
-            label="Thêm giảng viên"
-            onClick={() => {
-              window.location.href = `/lecturers/create`;
-            }}
-          />
-        </Box>
       </Box>
       <MaterialReactTable
         columns={columns}
@@ -110,6 +105,7 @@ const ListLecturer = () => {
             address: false,
             phone_number: false,
             email: false,
+            status: true,
             "recommender_details.full_name": false,
           },
         }}
@@ -117,7 +113,13 @@ const ListLecturer = () => {
         positionActionsColumn={"last"}
         renderRowActions={({ row }) => (
           <Box sx={{ display: "flex", flexWrap: "nowrap", gap: "8px" }}>
-
+            <IconButton
+              color="primary"
+              component={Link}
+              to={`/lecturers/check/${row.original.id}`}
+            >
+              <CheckCircleIcon />
+            </IconButton>
             <IconButton
               color="primary"
               component={Link}
@@ -174,4 +176,4 @@ const ListLecturer = () => {
   );
 };
 
-export default ListLecturer;
+export default ListPotentialLecturer;

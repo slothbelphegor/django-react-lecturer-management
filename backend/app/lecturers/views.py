@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.db.models import Q
+from django.contrib.auth.models import Group
 from rest_framework import viewsets, permissions ,status
 from .serializers import *
 from .models import *
@@ -18,10 +20,31 @@ class LecturerStatusSerializer(serializers.ModelSerializer):
 class LecturerViewSet(viewsets.ModelViewSet):
     queryset = Lecturer.objects.all()
     serializer_class = LecturerSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request):
+        lecturer_group = Group.objects.filter(name='lecturer').first()
+        queryset = Lecturer.objects.filter(
+            Q(user__groups=lecturer_group) |
+            Q(user=None)
+        )
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def all(self, request):
         queryset = Lecturer.objects.all()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def potential_lecturers(self, request):
+        # Get the group object for 'potential_lecturer'
+        potential_group = Group.objects.filter(name='potential_lecturer').first()
+        queryset = Lecturer.objects.filter(
+            Q(status="Chưa duyệt hồ sơ") |
+            Q(user__groups=potential_group)
+        ).distinct()
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
@@ -50,6 +73,41 @@ class LecturerViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=400)
         except Lecturer.DoesNotExist:
             return Response({"error": "Lecturer not found"}, status=404)
+        
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def sign_contract(self, request, pk=None):
+        """
+        Set lecturer status to 'Đã ký hợp đồng' and add user to 'lecturer' group.
+        """
+        try:
+            lecturer = self.get_queryset().get(pk=pk)
+        except Lecturer.DoesNotExist:
+            return Response({"error": "Lecturer not found"}, status=404)
+
+        # Set status
+        lecturer.status = "Đã ký hợp đồng"
+        lecturer.save()
+
+        # Add user to 'lecturer' group if not already
+        if lecturer.user:
+            lecturer_group, _ = Group.objects.get_or_create(name='lecturer')
+            if not lecturer.user.groups.filter(name='lecturer').exists():
+                lecturer.user.groups.set([lecturer_group])
+                lecturer.user.save()
+
+        serializer = self.get_serializer(lecturer)
+        return Response(serializer.data)
+    
+    def partial_update(self, request, pk=None):
+        try:
+            lecturer = self.queryset.get(pk=pk)
+            serializer = LecturerStatusSerializer(lecturer, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=400)
+        except Lecturer.DoesNotExist:
+            return Response({"error": "Lecturer not found"}, status=404)
     
     def destroy(self, request, pk=None):
         try:
@@ -59,12 +117,19 @@ class LecturerViewSet(viewsets.ModelViewSet):
         except Lecturer.DoesNotExist:
             return Response({"error": "Lecturer not found"}, status=404)
         
-    @action(detail=False, methods=['get', 'put', 'patch'], permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=['get', 'put', 'patch', 'post'])
     def me(self, request):
         try:
             lecturer = Lecturer.objects.get(user=request.user)
         except Lecturer.DoesNotExist:
-            return Response({"error": "Lecturer not found"}, status=404)
+            # User has not been assigned to any user -> Create a new lecturer for the user
+            data = request.data.copy()
+            data['user'] = request.user.id
+            serializer = self.serializer_class(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=201)
+            return Response(serializer.errors, status=400)
 
         if request.method in ['PUT', 'PATCH']:
             serializer = self.get_serializer(lecturer, data=request.data, partial=(request.method == 'PATCH'))

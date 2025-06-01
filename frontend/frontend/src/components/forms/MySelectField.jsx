@@ -7,7 +7,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import { Controller } from 'react-hook-form';
 
 export default function MySelectField(props) {
-    const { label, options, name, control} = props
+    const { label, options, name, control, disabled} = props
     return (
         <Controller
             name={name}
@@ -24,6 +24,7 @@ export default function MySelectField(props) {
                         id="demo-simple-select"
                         value={value}
                         label={label}
+                        disabled={disabled}
                         onChange={onChange}
                         onBlur={onBlur}
                     >

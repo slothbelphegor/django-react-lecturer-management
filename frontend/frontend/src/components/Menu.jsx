@@ -12,6 +12,7 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from "@mui/icons-material/Logout";
+import QueueIcon from '@mui/icons-material/Queue';
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import BookIcon from '@mui/icons-material/Book';
@@ -30,6 +31,7 @@ export default function Menu() {
   const location = useLocation(); // define which route is used
   const path = location.pathname;
   const navigate = useNavigate();
+  const currentRole = localStorage.getItem("Role")
  
   const logoutUser = () => {
     AxiosInstance.post("logout/", {})
@@ -48,11 +50,6 @@ export default function Menu() {
       sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
       component="nav"
       aria-labelledby="nested-list-subheader"
-    //   subheader={
-    //     <ListSubheader component="div" id="nested-list-subheader">
-    //       Lecturers
-    //     </ListSubheader>
-    //   }
     >
       <ListItemButton component={Link} to="/" selected={"/" === path}>
         <ListItemIcon>
@@ -69,26 +66,32 @@ export default function Menu() {
       </ListItemButton>
       <Collapse in={open == "me"} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton  component={Link} to="/my_info" selected={"/my_info" === path} sx={{ pl: 4 }}>
-            <ListItemIcon>
-              <InfoIcon />
-            </ListItemIcon>
-            <ListItemText primary="Lý lịch" />
-          </ListItemButton>
+          {/* {['admin', 'lecturer', 'potential_lecturer'].includes(currentRole) &&  */ 
+          <>
+            <ListItemButton  component={Link} to="/my_info" selected={"/my_info" === path} sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <InfoIcon />
+              </ListItemIcon>
+              <ListItemText primary="Lý lịch" />
+            </ListItemButton>
+            
+            <ListItemButton component={Link} to="/my_evaluations" selected={"/my_evaluations" === path} sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <ThumbUpIcon />
+              </ListItemIcon>
+              <ListItemText primary="Đánh giá" />
+            </ListItemButton>
 
-          <ListItemButton component={Link} to="/my_evaluations" selected={"/my_evaluations" === path} sx={{ pl: 4 }}>
-            <ListItemIcon>
-              <ThumbUpIcon />
-            </ListItemIcon>
-            <ListItemText primary="Đánh giá" />
-          </ListItemButton>
-
-          <ListItemButton component={Link} to="/my_schedules" selected={"/my_schedules" === path} sx={{ pl: 4 }}>
-            <ListItemIcon>
-              <ScheduleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Lịch giảng" />
-          </ListItemButton>
+            <ListItemButton component={Link} to="/my_schedules" selected={"/my_schedules" === path} sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <ScheduleIcon />
+              </ListItemIcon>
+              <ListItemText primary="Lịch giảng" />
+            </ListItemButton>
+          </>
+          }
+          
+          
           <ListItemButton component={Link} to="/my_account" selected={"/my_account" === path} sx={{ pl: 4 }}>
             <ListItemIcon>
               <AccountCircleIcon />
@@ -107,7 +110,23 @@ export default function Menu() {
           <PeopleIcon />
         </ListItemIcon>
         <ListItemText primary="Giảng viên" />
+        {open == "lecturers" ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
+      <Collapse in={open == "lecturers"} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          {/* {['admin', 'lecturer', 'potential_lecturer'].includes(currentRole) &&  */ 
+          <>
+            <ListItemButton  component={Link} to="/potential_lecturers" selected={"/potential_lecturers" === path} sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <QueueIcon />
+              </ListItemIcon>
+              <ListItemText primary="Danh sách đăng ký thỉnh giảng" />
+            </ListItemButton>
+          </>
+          }
+        </List>
+      </Collapse>
+      
       <ListItemButton 
         onClick={() => handleClick('subjects')}
         component={Link}

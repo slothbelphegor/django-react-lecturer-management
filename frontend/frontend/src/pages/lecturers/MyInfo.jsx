@@ -11,20 +11,31 @@ import LecturerInfoForm from "../../components/full_forms/LecturerInfoForm"
 const MyInfo = () => {
   const params = useParams();
   const [currentLecturer, setCurrentLecturer] = useState({});
+  const [currentUser, setCurrentUser] = useState({});
   const [showMessage, setShowMessage] = useState(false);
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState("");
   const [lecturers, setLecturers] = useState([]);
 
+  const currentRole = localStorage.getItem("Role")
   const getData = () => {
 
     AxiosInstance.get("lecturers/").then((res) => {
       setLecturers(res.data);
     });
-    AxiosInstance.get(`lecturers/me/`).then((res) => {
-      setCurrentLecturer(res.data);
-      console.log(res.data);
+    if (currentRole == 'potential_lecturer') {
+      AxiosInstance.get(`users/me/`).then((res) => {
+        setCurrentUser(res.data);
+        console.log(res.data)
+      });
+    }
+
+      AxiosInstance.get(`lecturers/me/`).then((res) => {
+        setCurrentLecturer(res.data);
+        console.log(res.data);
     });
+    
+    
   };
 
   const navigate = useNavigate();
@@ -77,7 +88,6 @@ const MyInfo = () => {
 
 
     const sentData = {
-      id: currentLecturer.id,
       name: data.name,
       email: data.email,
       phone_number: data.phone,
@@ -110,23 +120,47 @@ const MyInfo = () => {
       user: currentLecturer.user,
     }
     console.log("Data to be sent:", sentData);
-    AxiosInstance.put(`lecturers/${currentLecturer.id}/`, sentData)
-      .then((res) => {
-        console.log("Response data: ",res.data);
-        setIsError(false);
-        setMessage("Lecturer updated successfully.");
-        setTimeout(() => {
-          navigate("/my_info");
-        }, 1500);
-      })
-      .catch((error) => {
-        setMessage("An error occurred while creating the lecturer.");
-        setIsError(true);
-        console.error(error.response.data);
-      })
-      .finally(() => {
-        setShowMessage(true);
-      });
+    if (currentRole == 'potential_lecturer' && !currentLecturer.user) {
+      console.log('potential')
+      sentData['status'] = 'Chưa duyệt hồ sơ'
+      AxiosInstance.post(`lecturers/me/`, sentData)
+        .then((res) => {
+          console.log("Response data: ",res.data);
+          setIsError(false);
+          setMessage("Lý lịch đã được cập nhật.");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        })
+        .catch((error) => {
+          setMessage("Có lỗi xảy ra.");
+          setIsError(true);
+          console.error(error.response.data);
+        })
+        .finally(() => {
+          setShowMessage(true);
+        });
+    }
+    else {
+      AxiosInstance.put(`lecturers/${currentLecturer.id}/`, sentData)
+        .then((res) => {
+          console.log("Response data: ",res.data);
+          setIsError(false);
+          setMessage("Lecturer updated successfully.");
+          setTimeout(() => {
+            navigate("/my_info");
+          }, 1500);
+        })
+        .catch((error) => {
+          setMessage("An error occurred while creating the lecturer.");
+          setIsError(true);
+          console.error(error.response.data);
+        })
+        .finally(() => {
+          setShowMessage(true);
+        });
+    }
+    
   };
   useEffect(() => {
     getData();

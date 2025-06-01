@@ -16,9 +16,11 @@ import * as yup from "yup";
 import { useEffect } from "react";
 import AxiosInstance from "../AxiosInstance";
 
-export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer} ) {
+export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer, onAccept, onReject, onPromote,
+  readOnly = false, isChecking = false} ) {
     const [subjects, setSubjects] = useState([]);
     const [lecturers, setLecturers] = useState([]);
+    const [isAccepted, setIsAccepted] = useState(1)
     
     const degreeOptions = [
       { id: 1, value: "Cử nhân", abbreviation: "CN" },
@@ -346,6 +348,8 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
     useEffect(() => {
       getData();
       if (lecturer && lecturer.exp_academic !== undefined) {
+        setIsAccepted(lecturer.status.localeCompare("Hồ sơ hợp lệ"))
+        console.log(lecturer.status.localeCompare("Hồ sơ hợp lệ"))
         const formValues = {
           name: lecturer.name,
           email: lecturer.email,
@@ -491,9 +495,9 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
   };
 
   return (
-    <form onSubmit={handleSubmit(submission,
+    <form onSubmit={submission ? handleSubmit(submission,
       (errors) => console.log("Validation Errors:", errors)
-    )}>
+    ) : null}>
       <Box
         className="formBox"
         sx={{
@@ -511,6 +515,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Họ tên"}
             name="name"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -526,6 +531,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Giới tính"}
             name="gender"
             control={control}
+            disabled={readOnly}
           />
         </Box>
 
@@ -538,6 +544,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Email"}
             name="email"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -549,6 +556,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Số điện thoại"}
             name="phone"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -561,6 +569,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             name="dob"
             control={control}
             type="date"
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -572,6 +581,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Dân tộc"}
             name="ethnic"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -583,6 +593,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Tôn giáo"}
             name="religion"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -594,6 +605,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Quê quán"}
             name="hometown"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -607,6 +619,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             name="degree"
             control={control}
             {...register("degree")}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -626,6 +639,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Học hàm"}
             name="title"
             control={control}
+            disabled={readOnly}
           />
           <MyTextField
             sx={{ gridColumn: "span 1", width: "100%" }}
@@ -633,6 +647,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Chức danh khoa học"}
             name="title_detail"
             control={control}
+            disabled={readOnly}
             slotProps={{
               input: {
                 startAdornment: (
@@ -655,6 +670,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             name="title_granted_at"
             type="month"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -666,6 +682,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Nơi ở hiện nay"}
             name="address"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -677,6 +694,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Đơn vị công tác"}
             name="workplace"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -688,6 +706,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Chức vụ"}
             name="work_position"
             control={control}
+            disabled={readOnly}
           />
         </Box>
 
@@ -713,6 +732,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             name="quota_code"
             {...register("quota_code")}
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -730,6 +750,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Nhập ngạch viên chức - mã ngạch cụ thể"}
             name="other_quota_code"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -741,6 +762,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Hệ số lương hiện hưởng"}
             name="salary_coefficient"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -753,6 +775,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Tháng năm xếp hệ số lương hiện hưởng"}
             name="salary_coefficient_granted_at"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -765,6 +788,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Ngày tháng năm được tuyển dụng vào biên chế"}
             name="recruited_at"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -776,6 +800,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             label={"Thâm niên giảng dạy ĐH, CĐ"}
             name="years_of_experience"
             control={control}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -838,6 +863,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                 label={"Nơi đào tạo"}
                 name={`school_name_${degree.abbreviation}`}
                 control={control}
+                disabled={readOnly}
               />
               <MyTextField
                 sx={{ gridColumn: "3 / 4", gridRow: "2 / 3" }}
@@ -845,6 +871,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                 label={"Chuyên ngành"}
                 name={`major_${degree.abbreviation}`}
                 control={control}
+                disabled={readOnly}
               />
               <MyDateTimeField
                 sx={{ gridColumn: "1 / 2", gridRow: "3 / 4" }}
@@ -853,6 +880,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                 label={"Từ"}
                 name={`from_${degree.abbreviation}`}
                 control={control}
+                disabled={readOnly}
               />
               <MyDateTimeField
                 sx={{ gridColumn: "2 / span 1", gridRow: "3 / 4" }}
@@ -861,6 +889,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                 label={"Đến"}
                 name={`to_${degree.abbreviation}`}
                 control={control}
+                disabled={readOnly}
               />
               <MyDateTimeField
                 sx={{ gridColumn: "3 / span 1", gridRow: "3 / 4" }}
@@ -869,6 +898,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                 label={"Tháng năm nhận bằng tốt nghiệp"}
                 name={`degree_granted_at_${degree.abbreviation}`}
                 control={control}
+                disabled={readOnly}
               />
             </Box>
           ))}
@@ -886,6 +916,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             className="formField"
             control={control}
             rows={2}
+            disabled={readOnly}
           />
         </Box>
         <Box
@@ -900,6 +931,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
             name={"exp_computer"}
             className="formField"
             control={control}
+            disabled={readOnly}
           />
         </Box>
 
@@ -941,6 +973,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                   name={`workExperiences.${index}.from`}
                   label="Từ tháng"
                   control={control}
+                  disabled={readOnly}
                 />
               </Box>
               <Box
@@ -957,6 +990,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                   name={`workExperiences.${index}.to`}
                   label="Đến tháng"
                   control={control}
+                  disabled={readOnly}
                 />
               </Box>
 
@@ -976,10 +1010,12 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                   name={`workExperiences.${index}.organization`}
                   label="Chức vụ, đơn vị công tác"
                   control={control}
+                  disabled={readOnly}
                 />
               </Box>
 
               {/* Nút xóa */}
+              {!readOnly ? 
               <IconButton
                 color="error"
                 onClick={() => removeWorkExperience(index)}
@@ -992,9 +1028,11 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
               >
                 <DeleteIcon />
               </IconButton>
+              : null}
+              
             </Box>
           ))}
-
+          {!readOnly ? 
           <MyButton
             variant="outlined"
             label={"Thêm giai đoạn"}
@@ -1002,6 +1040,8 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
               appendWorkExperiences({ from: "", to: "", organization: "" })
             }
           ></MyButton>
+        : null}
+          
         </Box>
 
         <Box
@@ -1044,6 +1084,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                   label={"Tên đề tài nghiên cứu"}
                   control={control}
                   name={`researches.${index}.name`}
+                  disabled={readOnly}
                 />
               </Box>
               <Box
@@ -1059,6 +1100,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                   label={"Năm hoàn thành"}
                   control={control}
                   name={`researches.${index}.year`}
+                  disabled={readOnly}
                 />
               </Box>
               <Box
@@ -1074,6 +1116,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                   label={"Trách nhiệm tham gia đề tài"}
                   control={control}
                   name={`researches.${index}.position`}
+                  disabled={readOnly}
                 />
               </Box>
               <Box
@@ -1107,8 +1150,10 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                   label={"Đề tài cấp"}
                   control={control}
                   name={`researches.${index}.level`}
+                  disabled={readOnly}
                 />
               </Box>
+              {!readOnly ? 
               <IconButton
                 color="error"
                 onClick={() => removeResearches(index)}
@@ -1121,8 +1166,11 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
               >
                 <DeleteIcon />
               </IconButton>
+              : null}
+              
             </Box>
           ))}
+          {!readOnly ? 
           <MyButton
             variant="outlined"
             label={"Thêm đề tài nghiên cứu"}
@@ -1135,6 +1183,8 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
               })
             }
           ></MyButton>
+          : null}
+          
           <Typography sx={{ width: "100%", paddingTop: "10px" }}>
             <span>Các công trình khoa học đã công bố:</span>
           </Typography>
@@ -1163,6 +1213,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                   label={"Tên công trình"}
                   control={control}
                   name={`publishedWorks.${index}.name`}
+                  disabled={readOnly}
                 />
               </Box>
               <Box
@@ -1178,6 +1229,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                   label={"Năm công bố"}
                   control={control}
                   name={`publishedWorks.${index}.year`}
+                  disabled={readOnly}
                 />
               </Box>
               <Box
@@ -1193,8 +1245,10 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
                   label={"Nơi công bố"}
                   control={control}
                   name={`publishedWorks.${index}.place`}
+                  disabled={readOnly}
                 />
               </Box>
+              {!readOnly ? 
               <IconButton
                 color="error"
                 onClick={() => removePublishedWorks(index)}
@@ -1207,8 +1261,11 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
               >
                 <DeleteIcon />
               </IconButton>
+              : null}
+              
             </Box>
           ))}
+          {!readOnly ? 
           <MyButton
             variant="outlined"
             label={"Thêm công trình"}
@@ -1216,6 +1273,8 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
               appendPublishedWorks({ name: "", year: "", place: "" })
             }
           ></MyButton>
+          : null}
+          
         </Box>
 
         <Box
@@ -1239,9 +1298,10 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
               className="formField"
               options={recommenderOptions}
               control={control}
+              disabled={readOnly}
             />
           </Box>
-          {isSelfLecturer ? 
+          {isSelfLecturer || isChecking ? 
           <Box className="formArea" sx={{ width: "100%" }}>
             <MyTextField
               label={"Tình trạng hồ sơ/hợp đồng"}
@@ -1270,17 +1330,79 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer}
               className="formField"
               options={subjects}
               control={control}
+              disabled={readOnly}
             />
           </Box>
           
         </Box>
 
+        {(isChecking && isAccepted != 0) ? 
+        <>
         <Box
           className="formArea"
           sx={{ gridColumn: "1 / span 3", width: "100%" }}
         >
-          <MyButton type="submit" fullWidth label={"Submit"}></MyButton>
+          <MyButton type="submit" fullWidth label={"Chấp nhận hồ sơ"}
+            onClick={handleSubmit((data) => {
+              onAccept(data)
+              console.log(data)
+            })}>
+
+          </MyButton>
         </Box>
+        <Box
+          className="formArea"
+          sx={{ gridColumn: "1 / span 3", width: "100%" }}
+        >
+          <MyButton 
+            type="submit" 
+            fullWidth 
+            label={"Từ chối hồ sơ"} 
+            sx={{backgroundColor: 'red'}}
+            onClick={handleSubmit((data) => {
+              onReject(data)
+              console.log(data)
+            })}>
+            
+          </MyButton>
+        </Box>
+        </>
+        
+        : 
+        <>
+        <Box
+          className="formArea"
+          sx={{ gridColumn: "1 / span 3", width: "100%" }}
+        >
+          <MyButton 
+            onClick={isChecking ? handleSubmit((data) => {
+                onPromote(data)
+                console.log(data)
+            }) : null}
+          type="submit" fullWidth label={
+            isChecking ? "Thăng lên giảng viên chính thức" :"Submit"
+          }></MyButton>
+        </Box>
+        {isChecking ? 
+        <Box
+          className="formArea"
+          sx={{ gridColumn: "1 / span 3", width: "100%" }}
+        >
+          <MyButton 
+            type="submit" 
+            fullWidth 
+            label={"Từ chối hồ sơ"} 
+            sx={{backgroundColor: 'red'}}
+            onClick={handleSubmit((data) => {
+              onReject(data)
+              console.log(data)
+            })}>
+            
+          </MyButton>
+        </Box>
+        : null}
+        </>
+        }
       </Box>
     </form>
   )

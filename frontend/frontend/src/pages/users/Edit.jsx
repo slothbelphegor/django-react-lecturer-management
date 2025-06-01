@@ -24,8 +24,9 @@ const EditUser = () => {
   const [message, setMessage] = useState("");
   const [lecturers, setLecturers] = useState()
   const [groups, setGroups] = useState([])
+  
   const getData = () => {
-    AxiosInstance.get('lecturers/').then((res) => {
+    AxiosInstance.get('lecturers/all/').then((res) => {
       setLecturers(res.data)
       console.log(res.data)
     })
@@ -35,18 +36,14 @@ const EditUser = () => {
     });
     AxiosInstance.get("groups/").then((res) => {
       setGroups(res.data)
-      console.log("Groups:", res.data)
     })
     
   };
 
-  useEffect(() => {
-      getData();
-    }, []); // get data on initial load page
 
-
-  const lecturerOptions = lecturers?.filter(l => !l.user || l.user == currentUser.id) // Only lecturers not linked to a user
-                                    .map(l => ({ value: l.id, id: l.id, showValue: `${l.name} - ${l.workplace}` }));
+  const lecturerOptions = lecturers
+    ?.filter(l => !l.user || l.user == currentUser.id || l.id === currentUser.lecturer)
+    .map(l => ({ value: l.id, id: l.id, showValue: `${l.name} - ${l.workplace}` }));
 
   console.log(lecturerOptions)
   const groupOptions = groups?.map((group) => ({
@@ -55,16 +52,44 @@ const EditUser = () => {
       showValue: `${group.name}`,
   }));
   
-  const {  control, handleSubmit, watch  } = useForm({
-    values: {
+  const {  control, handleSubmit, watch, reset  } = useForm({
+    // values: {
+    //     username: currentUser.username,
+    //     email: currentUser.email,
+    //     group: groups.find((group) => group.id == currentUser.groups[0])?.id,
+    //     lecturer: currentUser.lecturer_str && lecturerOptions
+    //     ? lecturerOptions.find((option) => option.showValue === currentUser.lecturer_str)?.value || ""
+    //     : "",
+    // }
+  });
+
+  useEffect(() => {
+      getData();
+    }, []); // get data on initial load page
+  
+  // Reset form when all data is loaded and stable
+  useEffect(() => {
+    console.log(lecturerOptions)
+    if (
+      currentUser &&
+      groups.length &&
+      lecturerOptions &&
+      groupOptions?.length // ensure groupOptions is ready
+    ) {
+      const formValues = {
         username: currentUser.username,
         email: currentUser.email,
         group: groups.find((group) => group.id == currentUser.groups[0])?.id,
-        lecturer: currentUser.lecturer_str
-        ? lecturerOptions.find((option) => option.showValue === currentUser.lecturer_str)?.value || ""
-        : "",
+        lecturer: currentUser.lecturer || (
+          lecturerOptions.find((option) => option.showValue === currentUser.lecturer_str)?.value || ""
+        ),
+      };
+      reset(formValues);
     }
-  });
+    // Only depend on reset, currentUser, groups, lecturerOptions, groupOptions
+    // This will NOT cause an infinite loop because getData is not called here
+  }, [currentUser, groups, reset]);
+
 
   const selectedGroup = watch("group");
 
@@ -74,6 +99,7 @@ const EditUser = () => {
       username: data.username,
       email: data.email,
       lecturer: data.lecturer,
+      groups: [selectedGroup]
     })
     .then((res) => {
         console.log("Response data: ",res.data);

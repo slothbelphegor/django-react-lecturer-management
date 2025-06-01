@@ -32,6 +32,11 @@ class LecturerSerializer(serializers.ModelSerializer):
     def get_subject_names(self, obj):
         return [subject.name for subject in obj.subjects.all()]
 
+class LecturerStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lecturer
+        fields = ['id', 'status']
+
 class EvaluationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evaluation

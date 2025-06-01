@@ -5,6 +5,7 @@ from .models import *
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth.models import Group
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from knox.models import AuthToken
 
@@ -44,6 +45,10 @@ class RegisterViewSet(viewsets.ViewSet):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+            # Add user to 'potential_lecturer' group
+            group, _ = Group.objects.get_or_create(name='potential_lecturer')
+            user.groups.set([group])  # Only this group
+            user.save()
             # Return the User except the password since it is write only
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
@@ -125,7 +130,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     queryset = Group.objects.all()
     pagination_class = None
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
     lookup_field = "pk"
     http_method_names = ("get", "post", "patch", "delete")
 

@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { Controller } from 'react-hook-form';
 
 export default function MyDateTimeField(props) {
-    const { label, name, control, type, sx, onChange: customOnChange } = props;
+    const { label, name, control, disabled, type, sx, onChange: customOnChange } = props;
     return (
         <Controller
             name={name}
@@ -21,6 +21,7 @@ export default function MyDateTimeField(props) {
                     type={type} // Use 'datetime-local' for date and time input
                     variant="outlined"
                     className={"myForm"}
+                    disabled={disabled}
                     onChange={(e) => {
                         onChange(e); // Update form state
                         if (customOnChange) customOnChange(e); // Call custom handler if provided

@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework_roles',
+    # 'rest_framework_roles',
     'django_extensions',
     'corsheaders',
     'users',
@@ -47,6 +47,11 @@ INSTALLED_APPS = [
     'lecturers',
     'documents',
 ]
+
+# REST_FRAMEWORK_ROLES = {
+#   'ROLES': 'app.roles.ROLES',
+#   'DEFAULT_EXCEPTION_CLASS': 'rest_framework.exceptions.NotFound',
+# }
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Allows cross-origin requests
