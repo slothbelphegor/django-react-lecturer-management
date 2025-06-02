@@ -30,6 +30,7 @@ export default function Navbar(props) {
   const logoutUser = () => {
     AxiosInstance.post('logout/', {})
      .then(() => {
+        localStorage.removeItem('Role');
         localStorage.removeItem('Token');
         navigate('/login');
       })

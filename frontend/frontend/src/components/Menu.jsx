@@ -21,18 +21,19 @@ import PersonIcon from '@mui/icons-material/Person';
 import InfoIcon from '@mui/icons-material/Info';
 import { Link } from "react-router-dom";
 import AxiosInstance from "./AxiosInstance";
+import { RoleContext } from "../components/RoleContext"; // Assuming you have a RoleContext to get the current role
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Menu() {
   const [open, setOpen] = React.useState('');
+  const { role } = React.useContext(RoleContext); // Assuming you have a RoleContext to get the current role
   const handleClick = (section) => {
     setOpen(open === section ? '' : section);
   };
   const location = useLocation(); // define which route is used
   const path = location.pathname;
   const navigate = useNavigate();
-  const currentRole = localStorage.getItem("Role")
- 
+  const currentRole = role 
   const logoutUser = () => {
     AxiosInstance.post("logout/", {})
       .then(() => {
@@ -66,7 +67,7 @@ export default function Menu() {
       </ListItemButton>
       <Collapse in={open == "me"} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          {/* {['admin', 'lecturer', 'potential_lecturer'].includes(currentRole) &&  */ 
+          {['lecturer', 'potential_lecturer'].includes(currentRole) &&  
           <>
             <ListItemButton  component={Link} to="/my_info" selected={"/my_info" === path} sx={{ pl: 4 }}>
               <ListItemIcon>
@@ -74,8 +75,11 @@ export default function Menu() {
               </ListItemIcon>
               <ListItemText primary="Lý lịch" />
             </ListItemButton>
-            
-            <ListItemButton component={Link} to="/my_evaluations" selected={"/my_evaluations" === path} sx={{ pl: 4 }}>
+          </>
+          }  
+          {['lecturer'].includes(currentRole) &&  
+          <>
+          <ListItemButton component={Link} to="/my_evaluations" selected={"/my_evaluations" === path} sx={{ pl: 4 }}>
               <ListItemIcon>
                 <ThumbUpIcon />
               </ListItemIcon>
@@ -89,7 +93,10 @@ export default function Menu() {
               <ListItemText primary="Lịch giảng" />
             </ListItemButton>
           </>
+          
           }
+            
+          
           
           
           <ListItemButton component={Link} to="/my_account" selected={"/my_account" === path} sx={{ pl: 4 }}>
@@ -101,6 +108,9 @@ export default function Menu() {
 
         </List>
       </Collapse>
+      
+      {['it_faculty', 'education_department'].includes(currentRole) &&  
+      <>
       <ListItemButton 
         onClick={() => handleClick('lecturers')}
         component={Link}
@@ -114,7 +124,7 @@ export default function Menu() {
       </ListItemButton>
       <Collapse in={open == "lecturers"} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          {/* {['admin', 'lecturer', 'potential_lecturer'].includes(currentRole) &&  */ 
+          {/* {['lecturer', 'potential_lecturer'].includes(currentRole) &&  */ 
           <>
             <ListItemButton  component={Link} to="/potential_lecturers" selected={"/potential_lecturers" === path} sx={{ pl: 4 }}>
               <ListItemIcon>
@@ -126,17 +136,38 @@ export default function Menu() {
           }
         </List>
       </Collapse>
+      </>
+      || 
+      <>
+      {currentRole !== 'potential_lecturer' && (
+        <ListItemButton 
+          onClick={() => handleClick('lecturers')}
+          component={Link}
+          to="/lecturers"
+          selected={"/lecturers" === path}>
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Giảng viên" />
+        </ListItemButton>
+      )}
       
-      <ListItemButton 
-        onClick={() => handleClick('subjects')}
-        component={Link}
-        to="/subjects"
-        selected={"/subjects" === path}>
-        <ListItemIcon>
-          <BookIcon />
-        </ListItemIcon>
-        <ListItemText primary="Môn học" />
-      </ListItemButton>
+      </>
+      }
+      
+      {currentRole !== 'potential_lecturer' && (
+        <ListItemButton 
+          onClick={() => handleClick('subjects')}
+          component={Link}
+          to="/subjects"
+          selected={"/subjects" === path}>
+          <ListItemIcon>
+            <BookIcon />
+          </ListItemIcon>
+          <ListItemText primary="Môn học" />
+        </ListItemButton>
+      )}
+      
       <ListItemButton 
         onClick={() => handleClick('documents')}
         component={Link}
@@ -147,6 +178,8 @@ export default function Menu() {
         </ListItemIcon>
         <ListItemText primary="Văn bản" />
       </ListItemButton>
+      {['education_department'].includes(currentRole) &&  
+      <>
       <ListItemButton 
         onClick={() => handleClick('users')}
         component={Link}
@@ -157,6 +190,9 @@ export default function Menu() {
         </ListItemIcon>
         <ListItemText primary="Tài khoản" />
       </ListItemButton>
+      </>
+      }
+      
       
       
       <ListItemButton onClick={logoutUser}>

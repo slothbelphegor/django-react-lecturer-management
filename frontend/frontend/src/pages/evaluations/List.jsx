@@ -1,4 +1,4 @@
-import { React, useMemo, useState, useEffect } from "react";
+import { React, useMemo, useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import AxiosInstance from "../../components/AxiosInstance";
@@ -10,13 +10,14 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import MyButton from "../../components/forms/MyButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { MaterialReactTable } from "material-react-table";
+import { RoleContext } from "../../components/RoleContext";
 
 const ListEvaluation = () => {
   const params = useParams();
   const lecturer_id = params.id;
   const [currentLecturer, setCurrentLecturer] = useState({});
   const [evaluations, setEvaluations] = useState([]);
-
+  const {role} = useContext(RoleContext);
   const getData = () => {
     AxiosInstance.get(`lecturers/${lecturer_id}/`).then((res) => {
       setCurrentLecturer(res.data);
@@ -69,17 +70,18 @@ const ListEvaluation = () => {
             Đánh giá giảng viên {currentLecturer.name}
           </Typography>
         </Box>
-        <Box>
-          <MyButton
-            type="button"
-            label="Thêm đánh giá"
-            onClick={() => {
-              window.location.href = `/lecturers/${lecturer_id}/evaluations/create`;
-            }}
-
-          />
-
-        </Box>
+        {['it_faculty', 'supervision_department'].includes(role) && (
+          <Box>
+            <MyButton
+              type="button"
+              label="Thêm đánh giá"
+              onClick={() => {
+                window.location.href = `/lecturers/${lecturer_id}/evaluations/create`;
+              }}
+            />
+          </Box>
+        )}
+        
       </Box>
 
       <MaterialReactTable

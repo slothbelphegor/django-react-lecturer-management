@@ -3,12 +3,13 @@ import { Box } from "@mui/material"
 import { Link } from "react-router-dom"
 import { useForm } from 'react-hook-form'
 import { useNavigate } from "react-router-dom"
-import { React, useState } from "react";
+import { React, useState, useContext } from "react";
 import MyMessage from "../../components/Message"
 import MyTextField from "../../components/forms/MyTextField"
 import MyPasswordField from "../../components/forms/MyPasswordField"
 import MyButton from "../../components/forms/MyButton"
 import AxiosInstance from "../../components/AxiosInstance"
+import { RoleContext } from "../../components/RoleContext"
 
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
@@ -16,7 +17,7 @@ import * as yup from "yup"
 const Login = () => {
     const navigate = useNavigate()  // Used for page navigation
     const [showMessage, setShowMessage] = useState(false)
-
+    const { setRole } = useContext(RoleContext);
     const schema = yup.object().shape({
         username_or_email: yup.string().required('Username or email is required'),
         password: yup.string().required('Password is required')
@@ -37,6 +38,8 @@ const Login = () => {
             // Store the token and role in localStorage
             localStorage.setItem("Token", response.data.token)
             localStorage.setItem("Role", response.data.user.group)
+            setRole(response.data.user.group); // <-- Update context here!
+            console.log("Role set to:", response.data.user.group)
             // Redirect to the home page
             navigate(`/`)
         }).catch((error) => {

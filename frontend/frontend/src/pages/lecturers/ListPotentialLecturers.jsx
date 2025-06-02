@@ -1,4 +1,4 @@
-import { React, useMemo, useState, useEffect } from "react";
+import { React, useMemo, useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import AxiosInstance from "../../components/AxiosInstance";
@@ -12,10 +12,11 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import MyButton from "../../components/forms/MyButton";
 import { MaterialReactTable } from "material-react-table";
+import { RoleContext } from "../../components/RoleContext";
 
 const ListPotentialLecturer = () => {
   const [lecturers, setLecturers] = useState([]);
-  
+  const { role } = useContext(RoleContext)
   // Su dung Axios lay du lieu tu backend
   const getData = () => {
     AxiosInstance.get("lecturers/potential_lecturers/").then((res) => {
@@ -113,6 +114,7 @@ const ListPotentialLecturer = () => {
         positionActionsColumn={"last"}
         renderRowActions={({ row }) => (
           <Box sx={{ display: "flex", flexWrap: "nowrap", gap: "8px" }}>
+            {["it_faculty", "education_department"].includes(role) && (
             <IconButton
               color="primary"
               component={Link}
@@ -120,27 +122,9 @@ const ListPotentialLecturer = () => {
             >
               <CheckCircleIcon />
             </IconButton>
-            <IconButton
-              color="primary"
-              component={Link}
-              to={`/lecturers/edit/${row.original.id}`}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              color="primary"
-              component={Link}
-              to={`/lecturers/${row.original.id}/evaluations`}
-            >
-              <ThumbUpIcon />
-            </IconButton>
-            <IconButton
-              color="primary"
-              component={Link}
-              to={`/lecturers/${row.original.id}/schedules`}
-            >
-              <CalendarMonthIcon />
-            </IconButton>
+            )}
+            
+            {role === "education_department" && (
             <IconButton
               color="error"
               component={Link}
@@ -148,6 +132,8 @@ const ListPotentialLecturer = () => {
             >
               <DeleteIcon />
             </IconButton>
+            )}
+            
           </Box>
         )}
         enableExpanding

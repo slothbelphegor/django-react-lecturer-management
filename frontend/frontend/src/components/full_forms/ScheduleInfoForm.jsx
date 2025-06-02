@@ -28,7 +28,7 @@ export default function ScheduleInfoForm({
   notes,
   hasDeleteButton,
   deleteSubmission,
-  viewFromSelf,
+  readOnly,
 }) {
   console.log(subjects);
   const subjectOptions = subjects.map((subject) => ({
@@ -64,7 +64,7 @@ export default function ScheduleInfoForm({
   const { handleSubmit, control, register, getValues, watch, reset } = useForm({
     resolver: resolvedSchema,
   });
-  if (viewFromSelf) {
+  if (readOnly) {
     return (
       <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <Box>

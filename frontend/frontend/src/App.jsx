@@ -1,10 +1,13 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+
 import './App.css'
 import Home from './pages/Home'
 
 import Navbar from './components/Navbar'
 import ProtectedRoute from './components/ProtectedRoutes'
 import AllowedRoute from './components/AllowedRoutes'
+import { RoleProvider } from './components/RoleContext';
 
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
@@ -45,8 +48,10 @@ import ListPotentialLecturer from './pages/lecturers/ListPotentialLecturers'
 function App() {
   const location = useLocation()
   const noNavbar = location.pathname === '/register' || location.pathname === "/login" || location.pathname.includes("password") 
+  
+  
   return (
-    <>
+    <RoleProvider >
       {
         noNavbar ?
           <Routes>
@@ -61,48 +66,53 @@ function App() {
               <Routes>
                 <Route element={<ProtectedRoute/>}>
                   <Route path="/" element={<Home />} />
-                  <Route path="/lecturers" element={<ListLecturer />} />
-                  <Route path="/lecturers/create" element={<CreateLecturer />}/>
-                  <Route path="/lecturers/edit/:id" element={<EditLecturer />}/>
-                  <Route path="/lecturers/delete/:id" element={<DeleteLecturer />}/>
-                  <Route path="/lecturers/check/:id" element={<CheckLecturer />}/>
+                  <Route path="/lecturers" element={<ListLecturer />}/>
+                  <Route element={<AllowedRoute allowedRoles={['education_department']}/>}>
+                    <Route path="/lecturers/create" element={<CreateLecturer />}/>
+                    <Route path="/lecturers/edit/:id" element={<EditLecturer />}/>
+                    <Route path="/lecturers/delete/:id" element={<DeleteLecturer />}/>
+                  </Route>
+                  <Route element={<AllowedRoute allowedRoles={['it_faculty', 'education_department']}/>}>
+                    <Route path="/lecturers/check/:id" element={<CheckLecturer />}/>
+                    <Route path="/potential_lecturers" element={<ListPotentialLecturer />} />
+                  </Route>
                   <Route path="/lecturers/:id/evaluations" element={<ListEvaluation />}/>
-                  <Route path="/lecturers/:id/evaluations/create" element={<CreateEvaluation />}/>
-                  <Route path="/lecturers/:id/evaluations/edit/:id" element={<EditEvaluation />}/>
-                  <Route path="/lecturers/:id/evaluations/delete/:id" element={<DeleteEvaluation />}/>
+                  <Route element={<AllowedRoute allowedRoles={['it_faculty', 'supervision_department']}/>}>
+                    <Route path="/lecturers/:id/evaluations/create" element={<CreateEvaluation />}/>
+                    <Route path="/lecturers/:id/evaluations/edit/:id" element={<EditEvaluation />}/>
+                    <Route path="/lecturers/:id/evaluations/delete/:id" element={<DeleteEvaluation />}/>
+                  </Route>
                   <Route path="/lecturers/:id/schedules" element={<ListSchedule />}/>
                   <Route path="/lecturers/:id/schedules/:id" element={<ScheduleDetails />}/>
                   <Route path="/potential_lecturers" element={<ListPotentialLecturer />} />
                   <Route path="/subjects" element={<ListSubject/>}></Route>
-                  {/* <Route element={<AllowedRoute allowedRoles={['education_department', 'it_faculty']}/>}> */}
+                  <Route element={<AllowedRoute allowedRoles={['education_department', 'it_faculty']}/>}>
                     <Route path="/subjects/create" element={<CreateSubject/>}></Route>
                     <Route path="/subjects/edit/:id" element={<EditSubject />}/>
                     <Route path="/subjects/delete/:id" element={<DeleteSubject />}/>
-                  {/* </Route>  */}
-                  <Route path="/documents" element={<ListDocument/>}></Route>
-                  {/* <Route element={<AllowedRoute allowedRoles={['education_department', 'it_faculty']}/>}> */}
                     <Route path="/documents/create" element={<CreateDocument/>}></Route>
                     <Route path="/documents/delete/:id" element={<DeleteDocument />}/>
                     <Route path="/documents/edit/:id" element={<EditDocument />}/>
-                  {/* </Route> */}
-                  {/* <Route element={<AllowedRoute allowedRoles={['education_department']}/>}> */}
+                  </Route> 
+                  <Route path="/documents" element={<ListDocument/>}></Route>
+                  <Route element={<AllowedRoute allowedRoles={['education_department']}/>}>
                     <Route path="/users" element={<ListUser />}/>
                     <Route path="/users/create" element={<CreateUser />}/>
                     <Route path="/users/edit/:id" element={<EditUser />}/>
                     <Route path="/users/delete/:id" element={<DeleteUser />}/>
-                  {/* </Route> */}
-                  {/* <Route element={<AllowedRoute allowedRoles={['lecturer', 'potential_lecturer']}/>}> */}
+                  </Route>
+                  <Route element={<AllowedRoute allowedRoles={['lecturer', 'potential_lecturer']}/>}>
                     <Route path="/my_info" element={<MyInfo />}/>
                     <Route path="/my_evaluations" element={<MyEvaluations/>}/>
                     <Route path="/my_schedules" element={<MySchedules/>}/>
-                  {/* </Route>   */}
+                  </Route>  
                   <Route path="/my_account" element={<MyAccount/>}/>
                 </Route>
               </Routes>
             }
           />
       }
-    </>
+    </RoleProvider>
   )
 }
 

@@ -119,7 +119,7 @@ class UserViewSet(viewsets.ViewSet):
             user = User.objects.get(id=request.user.id)
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=404)
-        serializer = self.serializer_class(user)
+        serializer = NewUserSerializer(user)
         return Response(serializer.data)
 
 class GroupViewSet(viewsets.ModelViewSet):

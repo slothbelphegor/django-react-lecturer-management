@@ -258,7 +258,7 @@ const MySchedules = () => {
         subjectId={info.event.extendedProps.subject}
         place={info.event.extendedProps.place}
         notes={info.event.extendedProps.notes}
-        viewFromSelf={true}
+        readOnly={true}
       />
     );
     console.log(info);

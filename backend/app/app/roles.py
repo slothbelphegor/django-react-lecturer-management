@@ -15,6 +15,28 @@ ROLES = {
     'staff': is_staff,
 
     # Some custom role examples
-    'lecturer': is_lecturer,
-    'potential_lecturer': is_potential_lecturer,
+    'lecturer': 
+        lambda request, view: 
+            is_user(request, view) 
+            and request.user.groups[0].name == 'lecturer',
+    'potential_lecturer': 
+        lambda request, view: 
+            is_user(request, view) 
+            and request.user.groups[0].name == 'potential_lecturer',
+    'it_faculty': 
+        lambda request, view: 
+            is_user(request, view) 
+            and request.user.groups[0].name == 'it_faculty',
+    'education_department': 
+        lambda request, view: 
+            is_user(request, view) 
+            and request.user.groups[0].name == 'education_department',
+    'supervision_department':
+        lambda request, view: 
+            is_user(request, view) 
+            and request.user.groups[0].name == 'supervision_department',
+    'it_faculty_or_lecturer': 
+        lambda request, view: 
+            is_user(request, view) and (request.user.groups[0].name == 'it_faculty' 
+                                        or request.user.groups[0].name == 'lecturer'),
 }

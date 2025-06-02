@@ -1,4 +1,4 @@
-import { React, useMemo, useState, useEffect } from "react";
+import { React, useMemo, useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import AxiosInstance from "../../components/AxiosInstance";
@@ -10,10 +10,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { MaterialReactTable } from "material-react-table";
+import { RoleContext } from "../../components/RoleContext";
 
 const ListDocument = () => {
   const [documents, setDocuments] = useState([]);
-
+  const { role } = useContext(RoleContext);
   const getData = () => {
     AxiosInstance.get("documents/").then((res) => {
       setDocuments(res.data);
@@ -74,15 +75,18 @@ const ListDocument = () => {
               Danh sách văn bản
             </Typography>
         </Box>
-        <Box>
-          <MyButton
-            type="button"
-            label="Thêm văn bản"
-            onClick={() => {
-              window.location.href = `/documents/create`;
-            }}
-          />
-        </Box>
+        {['education_department', 'it_faculty'].includes(role) && (
+          <Box>
+            <MyButton
+              type="button"
+              label="Thêm văn bản"
+              onClick={() => {
+                window.location.href = `/documents/create`;
+              }}
+            />
+          </Box>
+        )}
+        
       </Box>
 
       <MaterialReactTable
@@ -99,10 +103,10 @@ const ListDocument = () => {
             signed_by: false, 
           },
         }}
-        enableColumnActions={false}
-        enableColumnFilters={false}
-        enablePagination={false}
-        enableSorting={false}
+        enableColumnActions={true}
+        enableColumnFilters={true}
+        enablePagination={true}
+        enableSorting={true}
         enableRowActions
         positionActionsColumn={'last'}
         renderRowActions={({ row }) => (
@@ -114,6 +118,8 @@ const ListDocument = () => {
             >
               <FileDownloadIcon />
             </IconButton>
+            {role === "education_department" && 
+            <>
             <IconButton
               color="primary"
               component={Link}
@@ -128,6 +134,8 @@ const ListDocument = () => {
             >
               <DeleteIcon />
             </IconButton>
+            </>}
+            
           </Box>
         )}
         enableExpanding

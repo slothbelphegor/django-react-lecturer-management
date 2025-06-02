@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import AxiosInstance from "../../components/AxiosInstance";
 
@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import { format } from "date-fns-tz";
 import { isSameDay, addDays, isAfter, isBefore, getDay, isEqual } from "date-fns";
 import { WindowScrollController } from "@fullcalendar/core/internal";
+import { RoleContext } from "../../components/RoleContext";
 
 const ListSchedule = () => {
   const params = useParams();
@@ -34,6 +35,7 @@ const ListSchedule = () => {
   const [open, setOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState();
   const [modalContent, setModalContent] = useState();
+  const {role} = useContext(RoleContext)
 
   const handleOpen = (info) => {
     setOpen(true);
@@ -256,7 +258,7 @@ const ListSchedule = () => {
 
   const scheduleClickAction = (info) => {
     handleOpen(info);
-    setModalTitle("Chỉnh sửa lịch giảng");
+    setModalTitle("Thông tin chi tiết lịch giảng");
     setModalContent(
       <ScheduleInfoForm
         subjects={subjects}
@@ -269,6 +271,7 @@ const ListSchedule = () => {
         submission={editSubmission}
         hasDeleteButton={true}
         deleteSubmission={deleteSubmission}
+        readOnly={role !== "education_department"}
       />
     );
     console.log(info);
@@ -384,8 +387,8 @@ const ListSchedule = () => {
             }
           }}
           eventClick={scheduleClickAction}
-          dateClick={dayClickAction}
-          selectable={true}
+          dateClick={role === "education_department" ? dayClickAction : null}
+          selectable={role === "education_department"}
           select={selectTimeAction}
           slotDuration="00:15:00"
           snapDuration="00:15:00"

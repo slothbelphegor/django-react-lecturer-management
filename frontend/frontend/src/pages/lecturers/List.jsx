@@ -15,6 +15,7 @@ import { MaterialReactTable } from "material-react-table";
 
 const ListLecturer = () => {
   const [lecturers, setLecturers] = useState([]);
+  const currentRole = localStorage.getItem("Role")
   
   // Su dung Axios lay du lieu tu backend
   const getData = () => {
@@ -117,7 +118,8 @@ const ListLecturer = () => {
         positionActionsColumn={"last"}
         renderRowActions={({ row }) => (
           <Box sx={{ display: "flex", flexWrap: "nowrap", gap: "8px" }}>
-
+            {currentRole === "education_department" && 
+            <>
             <IconButton
               color="primary"
               component={Link}
@@ -125,6 +127,8 @@ const ListLecturer = () => {
             >
               <EditIcon />
             </IconButton>
+            </>}
+            {["it_faculty", "supervision_department"].includes(currentRole) && (
             <IconButton
               color="primary"
               component={Link}
@@ -132,6 +136,8 @@ const ListLecturer = () => {
             >
               <ThumbUpIcon />
             </IconButton>
+            )}
+            
             <IconButton
               color="primary"
               component={Link}
@@ -139,6 +145,8 @@ const ListLecturer = () => {
             >
               <CalendarMonthIcon />
             </IconButton>
+
+            {currentRole === "education_department" && (
             <IconButton
               color="error"
               component={Link}
@@ -146,6 +154,8 @@ const ListLecturer = () => {
             >
               <DeleteIcon />
             </IconButton>
+            )}
+            
           </Box>
         )}
         enableExpanding

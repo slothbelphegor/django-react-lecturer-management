@@ -50,7 +50,7 @@ const MyAccount = () => {
           sx={{ marginLeft: "15px", fontWeight: "bold" }}
           variant="subtitle2"
         >
-          Add a new document
+          Thông tin tài khoản
         </Typography>
       </Box>
       {showMessage ? (
