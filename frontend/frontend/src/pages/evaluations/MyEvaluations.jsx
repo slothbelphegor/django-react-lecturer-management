@@ -75,7 +75,7 @@ const MyEvaluations = () => {
         }}
         enableColumnActions={false}
         enableColumnFilters={true}
-        enablePagination={false}
+        enablePagination={true}
         enableSorting={true}
         
         enableExpanding

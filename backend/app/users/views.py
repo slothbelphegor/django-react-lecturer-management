@@ -54,14 +54,23 @@ class RegisterViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=400)
 
 class UserViewSet(viewsets.ViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+    view_permissions = {
+        'list,retrieve,update,create,destroy,partial_update': {
+            'education_department': True,
+        },
+        'me': {
+            'user': True,
+        }
+    }
+
     def list(self, request):
         queryset = User.objects.all()
         serializer = NewUserSerializer(queryset, many=True)
         return Response(serializer.data)
-    
+   
     def create(self, request):
         serializer = NewUserSerializer(data=request.data)
         if serializer.is_valid():

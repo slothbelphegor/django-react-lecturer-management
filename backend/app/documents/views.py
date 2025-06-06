@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import viewsets, permissions ,status
+from rest_framework.exceptions import PermissionDenied, NotAuthenticated
 from .serializers import *
 from .models import *
 from rest_framework.response import Response
@@ -9,7 +10,17 @@ from rest_framework.response import Response
 class DocumentViewSet(viewsets.ModelViewSet):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.IsAuthenticated]  # Adjust as needed
+    view_permissions = {
+        'list': {
+            'user': True,
+            'anon': NotAuthenticated,
+        },
+        'retrieve,update,create,destroy': {
+            'education_department': True,
+            'it_faculty': True,
+        } 
+    }
 
     def list(self, request):
         queryset = Document.objects.all()

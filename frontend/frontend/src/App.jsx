@@ -51,8 +51,8 @@ function App() {
   
   
   return (
-    <RoleProvider >
-      {
+    // <RoleProvider >
+      
         noNavbar ?
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -111,8 +111,8 @@ function App() {
               </Routes>
             }
           />
-      }
-    </RoleProvider>
+      
+    // </RoleProvider>
   )
 }
 

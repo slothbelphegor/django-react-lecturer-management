@@ -26,7 +26,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Menu() {
   const [open, setOpen] = React.useState('');
-  const { role } = React.useContext(RoleContext); // Assuming you have a RoleContext to get the current role
+  //const { role } = React.useContext(RoleContext); // Assuming you have a RoleContext to get the current role
+  const role = localStorage.getItem("Role") || ""; // Default to empty string if Role is not set
   const handleClick = (section) => {
     setOpen(open === section ? '' : section);
   };

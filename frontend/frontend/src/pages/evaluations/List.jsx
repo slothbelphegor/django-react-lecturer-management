@@ -17,7 +17,8 @@ const ListEvaluation = () => {
   const lecturer_id = params.id;
   const [currentLecturer, setCurrentLecturer] = useState({});
   const [evaluations, setEvaluations] = useState([]);
-  const {role} = useContext(RoleContext);
+  // const {role} = useContext(RoleContext);
+  const role = localStorage.getItem("Role") || ""; 
   const getData = () => {
     AxiosInstance.get(`lecturers/${lecturer_id}/`).then((res) => {
       setCurrentLecturer(res.data);
@@ -97,7 +98,7 @@ const ListEvaluation = () => {
         }}
         enableColumnActions={false}
         enableColumnFilters={true}
-        enablePagination={false}
+        enablePagination={true}
         enableSorting={true}
         
         enableExpanding

@@ -7,6 +7,8 @@ from .models import *
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_roles.granting import is_self
+from app.roles import *
 from .permissions import *
 
 # Create your views here.
@@ -20,8 +22,34 @@ class LecturerStatusSerializer(serializers.ModelSerializer):
 class LecturerViewSet(viewsets.ModelViewSet):
     queryset = Lecturer.objects.all()
     serializer_class = LecturerSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
+    # permission_classes = [permissions.IsAuthenticated]
+    view_permissions = {
+        'me': {
+            'user': True,
+        },
+        'list': {
+            'lecturer': True,
+            'potential_lecturer': False,
+            'it_faculty': True,
+            'education_department': True,
+            'supervision_department': True,
+        },
+        'retrieve,update,create,destroy': {
+            'education_department': True,
+            'it_faculty': True,
+        },
+        'potential_lecturers': {
+            'it_faculty': True,
+            'education_department': True,
+        },
+        'partial_update,update_status': {
+            'education_department': True,
+            'it_faculty': True,
+        },
+        'sign_contract': {
+            'education_department': True,
+        }
+    }
     def list(self, request):
         lecturer_group = Group.objects.filter(name='lecturer').first()
         queryset = Lecturer.objects.filter(
@@ -39,7 +67,6 @@ class LecturerViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def potential_lecturers(self, request):
-        # Get the group object for 'potential_lecturer'
         potential_group = Group.objects.filter(name='potential_lecturer').first()
         queryset = Lecturer.objects.filter(
             Q(status="Chưa duyệt hồ sơ") |
@@ -74,7 +101,7 @@ class LecturerViewSet(viewsets.ModelViewSet):
         except Lecturer.DoesNotExist:
             return Response({"error": "Lecturer not found"}, status=404)
         
-    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    @action(detail=True, methods=['post'])
     def sign_contract(self, request, pk=None):
         """
         Set lecturer status to 'Đã ký hợp đồng' and add user to 'lecturer' group.
@@ -130,7 +157,6 @@ class LecturerViewSet(viewsets.ModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=201)
             return Response(serializer.errors, status=400)
-
         if request.method in ['PUT', 'PATCH']:
             serializer = self.get_serializer(lecturer, data=request.data, partial=(request.method == 'PATCH'))
             if serializer.is_valid():
@@ -156,7 +182,20 @@ class LecturerViewSet(viewsets.ModelViewSet):
 class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
+    view_permissions = {
+        'list': {
+            'lecturer': True,
+            'potential_lecturer': False,
+            'it_faculty': True,
+            'education_department': True,
+            'supervision_department': True,
+            
+        },
+        'retrieve,update,create,destroy': {
+            'education_department': True,
+        } 
+    }
 
     def list(self, request):
         queryset = Subject.objects.all()
@@ -204,7 +243,20 @@ class SubjectViewSet(viewsets.ModelViewSet):
 class EvaluationViewSet(viewsets.ModelViewSet):
     queryset = Evaluation.objects.all()
     serializer_class = EvaluationSerializer
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
+    view_permissions = {
+        'get_by_lecturer': {
+            'it_faculty': True,
+            'supervision_department': True,
+        },
+        'retrieve,update,create,destroy': {
+            'supervision_department': True,
+            'it_faculty': True,
+        },
+        'me': {
+            'user': True
+        }
+    }
 
     def list(self, request):
         queryset = Evaluation.objects.all()
@@ -251,35 +303,43 @@ class EvaluationViewSet(viewsets.ModelViewSet):
         serializer = self.serializer_class(evaluations, many=True)
         return Response(serializer.data)
     
+    @action(detail=False, methods=["get"], url_path="by-lecturer/(?P<lecturer_id>[^/.]+)")
+    def get_by_lecturer(self, request, lecturer_id=None):
+        """
+        Custom action to retrieve all lecturers for a given lecturer ID.
+        """
+        try:
+            schedules = self.queryset.filter(lecturer_id=lecturer_id)
+            serializer = self.serializer_class(schedules, many=True)
+            print(request)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Schedule.DoesNotExist:
+            return Response(
+                {"error": "Schedule not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
     
-# from rest_framework.decorators import action
-# from rest_framework.response import Response
-# from rest_framework import status
 
-# class EvaluationViewSet(viewsets.ModelViewSet):
-#     queryset = Evaluation.objects.all()
-#     serializer_class = EvaluationSerializer
-#     permission_classes = [permissions.AllowAny]
 
-#     @action(detail=False, methods=["get"], url_path="by-lecturer/(?P<lecturer_id>[^/.]+)")
-#     def get_schedules_by_lecturer(self, request, lecturer_id=None):
-#         """
-#         Custom action to retrieve all lecturers for a given lecturer ID.
-#         """
-#         try:
-#             schedules = self.queryset.filter(lecturer_id=lecturer_id)
-#             serializer = self.serializer_class(schedules, many=True)
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         except Schedule.DoesNotExist:
-#             return Response(
-#                 {"error": "Schedule not found"},
-#                 status=status.HTTP_404_NOT_FOUND,
-#             )
     
 class ScheduleViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
+    view_permissions = {
+        'get_schedules_by_lecturer' :{
+            'lecturer': True,
+            'education_department': True,
+            'supervision_department': True,
+            'it_faculty': True,
+        },
+        'me': {
+            'user': True,
+        },
+        'create,update,destroy,partial_update': {
+            'education_department': True,
+        }
+    }
     
     def list(self, request):
         queryset = Schedule.objects.all()

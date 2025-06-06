@@ -42,6 +42,7 @@ export default function ScheduleInfoForm({
     startTime ? (formValues["start"] = startTime) : "";
     endTime ? (formValues["end"] = endTime) : "";
     fromDate ? (formValues["from_date"] = fromDate) : "";
+    formValues["to_date"] = fromDate;
     subjectId
       ? (formValues["subject"] = subjects.find(
           (item) => item.id == subjectId

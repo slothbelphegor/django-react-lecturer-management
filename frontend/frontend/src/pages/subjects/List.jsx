@@ -13,7 +13,8 @@ import { RoleContext } from "../../components/RoleContext";
 
 const ListSubject = () => {
   const [subjects, setSubjects] = useState([]);
-  const { role } = useContext(RoleContext);
+  //const { role } = useContext(RoleContext) ? localStorage.getItem("Role") : "";
+  const role = localStorage.getItem("Role") || ""; 
   const getData = () => {
     AxiosInstance.get("subjects/").then((res) => {
       setSubjects(res.data);
@@ -22,6 +23,7 @@ const ListSubject = () => {
 
   useEffect(() => {
     getData();
+    console.log("Role: ", role);
   }, []); // get data on initial load page
 
   const columns = useMemo(

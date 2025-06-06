@@ -16,7 +16,8 @@ import { RoleContext } from "../../components/RoleContext";
 
 const ListPotentialLecturer = () => {
   const [lecturers, setLecturers] = useState([]);
-  const { role } = useContext(RoleContext)
+  //const { role } = useContext(RoleContext)
+  const role = localStorage.getItem("Role") || ""; // Default to 'education_department' if Role is not set
   // Su dung Axios lay du lieu tu backend
   const getData = () => {
     AxiosInstance.get("lecturers/potential_lecturers/").then((res) => {

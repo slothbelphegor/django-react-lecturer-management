@@ -35,8 +35,9 @@ const ListSchedule = () => {
   const [open, setOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState();
   const [modalContent, setModalContent] = useState();
-  const {role} = useContext(RoleContext)
-
+  //const {role} = useContext(RoleContext)
+  const role = localStorage.getItem("Role") || ""; 
+  
   const handleOpen = (info) => {
     setOpen(true);
     setSelectedDate(info?.dateStr);

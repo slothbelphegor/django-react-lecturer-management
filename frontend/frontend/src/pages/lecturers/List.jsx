@@ -92,6 +92,7 @@ const ListLecturer = () => {
             Danh sách giảng viên
           </Typography>
         </Box>
+        {currentRole === "education_department" && (
         <Box>
           <MyButton
             type="button"
@@ -101,6 +102,8 @@ const ListLecturer = () => {
             }}
           />
         </Box>
+        )}
+        
       </Box>
       <MaterialReactTable
         columns={columns}

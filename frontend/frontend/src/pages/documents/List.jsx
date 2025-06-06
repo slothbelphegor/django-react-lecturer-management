@@ -10,11 +10,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { MaterialReactTable } from "material-react-table";
-import { RoleContext } from "../../components/RoleContext";
 
 const ListDocument = () => {
   const [documents, setDocuments] = useState([]);
-  const { role } = useContext(RoleContext);
+  //const { role } = useContext(RoleContext);
+  const role = localStorage.getItem("Role") || ""; // Default to 'education_department' if Role is not set
   const getData = () => {
     AxiosInstance.get("documents/").then((res) => {
       setDocuments(res.data);
@@ -118,7 +118,7 @@ const ListDocument = () => {
             >
               <FileDownloadIcon />
             </IconButton>
-            {role === "education_department" && 
+            {["education_department",'it_faculty'].includes(role) && 
             <>
             <IconButton
               color="primary"
