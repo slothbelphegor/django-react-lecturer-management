@@ -14,19 +14,18 @@ import MySelectField from "../../components/forms/MySelectField";
 import MyDateTimeField from "../../components/forms/MyDateTimeField";
 
 const EditDocument = () => {
-  const params = useParams();
-  const document_id = params.id;
+  
   const [showMessage, setShowMessage] = useState(false);
   const [currentDocument, setCurrentDocument] = useState({});
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState("");
-
+  const params = useParams();
+  const document_id = params.id;
   const getData = () => {
     AxiosInstance.get(`documents/${document_id}/`).then((res) => {
       setCurrentDocument(res.data);
     });
   };
-
   useEffect(() => {
       getData();
     }, []); // get data on initial load page

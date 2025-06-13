@@ -15,8 +15,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import AxiosInstance from "../AxiosInstance";
+import MyMultiSelectField from "../forms/MyMultiSelectField";
 
-export default function EvaluationForm({ evaluation, submission }) {
+export default function RecommendationForm({ recommendation, submission }) {
+  const [subjects, setSubjects] = useState([]);
   const typeOptions = [
     {
       id: "1",
@@ -32,13 +34,17 @@ export default function EvaluationForm({ evaluation, submission }) {
   ];
 
   const schema = yup.object().shape({
-    title: yup.string().required("Chưa nhập tiêu đề"),
-    date: yup
-      .date()
-      .typeError("Chưa nhập ngày đánh giá")
-      .max(new Date(), "Ngày không được lớn hơn ngày hiện tại"),
-    type: yup.string().required("Chưa chọn loại đánh giá"),
-    content: yup.string().required("Chưa nhập nội dung đánh giá"),
+    name: yup.string().required("Chưa nhập tên giảng viên"),
+    email: yup
+      .string()
+      .email("Email không hợp lệ")
+      .required("Chưa nhập email"),
+    phone_number: yup
+        .string()
+        .required("Chưa nhập số điện thoại")
+        .matches(/^\+?[0-9]{7,14}$/, "Số điện thoại không hợp lệ"),
+    workplace: yup.string().required("Chưa nhập nơi công tác"),
+    content: yup.string().required("Chưa nhập mô tả sơ bộ về giảng viên"),
   });
 
   const resolvedSchema = yupResolver(schema);
@@ -58,16 +64,22 @@ export default function EvaluationForm({ evaluation, submission }) {
   }
 
   useEffect(() => {
-    if (evaluation) {
+    AxiosInstance.get("subjects/").then((res) => {
+        setSubjects(res.data);
+        console.log(res.data);
+    });
+    if (recommendation) {
       const formValues = {
-        title: evaluation.title,
-        content: evaluation.content,
-        date: evaluation.date,
-        type: evaluation.type,
+        name: recommendation.name,
+        content: recommendation.content,
+        subjects: recommendation.subjects,
+        workplace: recommendation.workplace,
+        email: recommendation.email,
+        phone_number: recommendation.phone_number,
       };
       reset(formValues);
     }
-  }, [evaluation, reset]);
+  }, [recommendation, reset]);
 
   return (
     <form onSubmit={handleSubmit(submission, (error) => console.log(error))}>
@@ -82,26 +94,41 @@ export default function EvaluationForm({ evaluation, submission }) {
         <Box className="formArea" sx={{ width: "100%", gridColumn: "span 4" }}>
           <MyTextField
             className="formField"
-            label={"Tiêu đề"}
-            name="title"
+            label={"Tên giảng viên được giới thiệu"}
+            name="name"
             control={control}
           />
         </Box>
-        <Box className="formArea" sx={{ gridColumn: "span 2", width: "100%" }}>
-          <MyDateTimeField
+        <Box className="formArea" sx={{ width: "100%", gridColumn: "span 2" }}>
+          <MyTextField
             className="formField"
-            label={"Ngày đánh giá"}
-            name="date"
+            label={"Email"}
+            name="email"
             control={control}
-            type="date"
           />
         </Box>
-        <Box className="formArea" sx={{ gridColumn: "span 2", width: "100%" }}>
-          <MySelectField
+        <Box className="formArea" sx={{ width: "100%", gridColumn: "span 2" }}>
+          <MyTextField
             className="formField"
-            label={"Loại đánh giá"}
-            name="type"
-            options={typeOptions}
+            label={"Số điện thoại"}
+            name="phone_number"
+            control={control}
+          />
+        </Box>
+        <Box className="formArea" sx={{ width: "100%", gridColumn: "span 4" }}>
+          <MyTextField
+            className="formField"
+            label={"Nơi công tác"}
+            name="workplace"
+            control={control}
+          />
+        </Box>
+        <Box className="formArea" sx={{ gridColumn: "span 4", width: "100%" }}>
+          <MyMultiSelectField
+            className="formField"
+            label={"Các môn học giảng dạy"}
+            name="subjects"
+            options={subjects}
             control={control}
           />
         </Box>
@@ -109,7 +136,7 @@ export default function EvaluationForm({ evaluation, submission }) {
         <Box className="formArea" sx={{ width: "100%", gridColumn: "span 4" }}>
           <MyDescriptionField
             className="formField"
-            label={"Chi tiết đánh giá"}
+            label={"Mô tả sơ bộ về giảng viên (bằng cấp, kinh nghiệm, v.v.)"}
             name="content"
             rows={4}
             control={control}

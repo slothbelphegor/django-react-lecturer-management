@@ -31,7 +31,7 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer,
     const titleOptions = [
       { id: "title1", value: "GS." },
       { id: "title2", value: "PGS." },
-      { id: "title3", value: "" },
+      { id: "title3", value: "", showValue: "None" },
     ];
   
     const quotaCodeOptions = [
@@ -388,20 +388,20 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer,
         };
         console.log(formValues.recommender);
         // Add experience work fields dynamically
-        formValues["workExperiences"] = lecturer.exp_work.map((exp) => ({
+        formValues["workExperiences"] = lecturer.exp_work?.map((exp) => ({
           organization: exp.organization,
           from: convertDateFormat(exp.from),
           to: convertDateFormat(exp.to),
         }));
         // Add research fields dynamically
-        formValues["researches"] = lecturer.researches.map((research) => ({
+        formValues["researches"] = lecturer.researches?.map((research) => ({
           name: research.name,
           year: research.year,
           position: research.position,
           level: research.level,
         }));
         // Add published works fields dynamically
-        formValues["publishedWorks"] = lecturer.published_works.map((work) => ({
+        formValues["publishedWorks"] = lecturer.published_works?.map((work) => ({
           name: work.name,
           year: work.year,
           place: work.place,

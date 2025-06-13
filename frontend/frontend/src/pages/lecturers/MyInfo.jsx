@@ -67,20 +67,20 @@ const MyInfo = () => {
       } : null,
     }
     
-    const workExperiences = data.workExperiences.map((exp) => ({
+    const workExperiences = data.workExperiences?.map((exp) => ({
       organization: exp.organization,
       from: format(new Date(exp.from), 'yyyy-MM-dd'),
       to: format(new Date(exp.to), 'yyyy-MM-dd'),
-    }));
+    })) ;
 
-    const researches = data.researches.map((research) => ({
+    const researches = data.researches?.map((research) => ({
       name: research.name,
       year: research.year,
       position: research.position,
       level: research.level,
     }));
 
-    const publishedWorks = data.publishedWorks.map((work) => ({
+    const publishedWorks = data.publishedWorks?.map((work) => ({
       name: work.name,
       year: work.year,
       place: work.place,
@@ -142,13 +142,13 @@ const MyInfo = () => {
         });
     }
     else {
-      AxiosInstance.put(`lecturers/${currentLecturer.id}/`, sentData)
+      AxiosInstance.put(`lecturers/me/`, sentData)
         .then((res) => {
           console.log("Response data: ",res.data);
           setIsError(false);
           setMessage("Lecturer updated successfully.");
           setTimeout(() => {
-            navigate("/my_info");
+            window.location.reload();
           }, 1500);
         })
         .catch((error) => {

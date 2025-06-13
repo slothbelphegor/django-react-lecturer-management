@@ -43,6 +43,11 @@ import DeleteUser from './pages/users/Delete'
 import CreateUser from './pages/users/Create'
 import CheckLecturer from './pages/lecturers/Check'
 import ListPotentialLecturer from './pages/lecturers/ListPotentialLecturers'
+import ListRecommendation from './pages/recommendations/List';
+import MyRecommendations from './pages/recommendations/MyRecommendations';
+import EditRecommendation from './pages/recommendations/Edit';
+import DeleteRecommendation from './pages/recommendations/Delete';
+import CreateRecommendation from './pages/recommendations/Create';
 
 
 function App() {
@@ -105,6 +110,10 @@ function App() {
                     <Route path="/my_info" element={<MyInfo />}/>
                     <Route path="/my_evaluations" element={<MyEvaluations/>}/>
                     <Route path="/my_schedules" element={<MySchedules/>}/>
+                    <Route path="/my_recommendations" element={<MyRecommendations/>}/>
+                    <Route path="/my_recommendations/create" element={<CreateRecommendation/>}/>
+                    <Route path="/my_recommendations/edit/:id" element={<EditRecommendation/>}/>
+                    <Route path="/my_recommendations/delete/:id" element={<DeleteRecommendation/>}/>
                   </Route>  
                   <Route path="/my_account" element={<MyAccount/>}/>
                 </Route>

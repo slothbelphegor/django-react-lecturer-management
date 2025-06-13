@@ -36,6 +36,10 @@ const ListPotentialLecturer = () => {
         header: "Tên",
       },
       {
+        'accessorKey': "date",
+        'header': "Ngày đăng ký"
+      },
+      {
         accessorKey: "email",
         header: "Email",
       },
@@ -67,6 +71,7 @@ const ListPotentialLecturer = () => {
         'accessorKey': "status",
         'header': "Tình trạng hồ sơ"
       },
+      
       {
         accessorKey: "recommender_details.full_name",
         header: "Người giới thiệu",
@@ -107,7 +112,7 @@ const ListPotentialLecturer = () => {
             address: false,
             phone_number: false,
             email: false,
-            status: true,
+            date: true,
             "recommender_details.full_name": false,
           },
         }}
@@ -134,7 +139,6 @@ const ListPotentialLecturer = () => {
               <DeleteIcon />
             </IconButton>
             )}
-            
           </Box>
         )}
         enableExpanding

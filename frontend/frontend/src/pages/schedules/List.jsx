@@ -379,7 +379,6 @@ const ListSchedule = () => {
             right: "listDay,timeGridWeek,dayGridMonth",
           }}
           events={filteredSchedules}
-          // màu theo tên môn học
           eventDidMount={(info) => {
             const className = info.event.classNames[0];
             if (className) {
