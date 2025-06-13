@@ -59,7 +59,8 @@ class UserViewSet(viewsets.ViewSet):
     serializer_class = RegisterSerializer
     view_permissions = {
         'list,retrieve,update,create,destroy,partial_update': {
-            'education_department': True,
+            'user': True,
+            'anon': True,
         },
         'me': {
             'user': True,

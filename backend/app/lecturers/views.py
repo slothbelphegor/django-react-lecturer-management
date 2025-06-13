@@ -1,5 +1,6 @@
+from datetime import date
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib.auth.models import Group
 from rest_framework import viewsets, permissions ,status
 from .serializers import *
@@ -34,21 +35,31 @@ class LecturerViewSet(viewsets.ModelViewSet):
             'education_department': True,
             'supervision_department': True,
         },
-        'retrieve,update,create,destroy': {
+        'retrieve,update,create,destroy,all': {
             'education_department': True,
             'it_faculty': True,
+            'supervision_department': True,
         },
         'potential_lecturers': {
             'it_faculty': True,
             'education_department': True,
         },
         'partial_update,update_status': {
+            
             'education_department': True,
             'it_faculty': True,
         },
         'sign_contract': {
             'education_department': True,
-        }
+        },
+        'degree_count': {
+            'anon': True,
+            'user': True,
+        },
+        'title_count': {
+            'anon': True,
+            'user': True,
+        },
     }
     def list(self, request):
         lecturer_group = Group.objects.filter(name='lecturer').first()
@@ -74,6 +85,49 @@ class LecturerViewSet(viewsets.ModelViewSet):
         ).distinct()
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def degree_count(self, request):
+        # Total number of lecturers
+        total = Lecturer.objects.count()
+        # Group by degree and count lecturers
+        data = (
+            Lecturer.objects.values('degree')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+        # Calculate percentage for each degree
+        result = [
+            {
+                "degree": item["degree"],
+                "percentage": round(item["count"] / total * 100, 2) if total > 0 else 0
+            }
+            for item in data
+        ]
+        # Response format: [{"degree": "PhD", "percentage": 40.0}, ...]
+        return Response(result)
+    
+    @action(detail=False, methods=['get'])
+    def title_count(self, request):
+        # Total number of lecturers
+        total = Lecturer.objects.count()
+        # Group by title and count lecturers
+        data = (
+            Lecturer.objects.values('title')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+        # Calculate percentage for each title
+        result = [
+            {
+                "title": item["title"] if item["title"] != "" else "None",
+                "percentage": round(item["count"] / total * 100, 2) if total > 0 else 0,
+            }
+            for item in data
+        ]
+        # Response format: [{"title": "Professor", "percentage": 40.0}, ...]
+        return Response(result)
+        
 
     def retrieve(self, request, pk=None):
         try:
@@ -179,6 +233,7 @@ class LecturerViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
+
 class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
@@ -194,13 +249,23 @@ class SubjectViewSet(viewsets.ModelViewSet):
         },
         'retrieve,update,create,destroy': {
             'education_department': True,
-        } 
+        },
+        'lecturer_count': {
+            'user': True,
+        }
     }
 
     def list(self, request):
         queryset = Subject.objects.all()
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'], url_path='lecturer_count')
+    def lecturer_count(self, request):
+        subjects = Subject.objects.annotate(
+            lecturer_count=Count('lecturer')
+        ).values('name', 'lecturer_count')
+        return Response(list(subjects))
     
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -239,6 +304,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
             return Response(status=204)
         except Subject.DoesNotExist:
             return Response({"error": "Subject not found"}, status=404)
+
 
 class EvaluationViewSet(viewsets.ModelViewSet):
     queryset = Evaluation.objects.all()
@@ -319,9 +385,7 @@ class EvaluationViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND,
             )
     
-
-
-    
+   
 class ScheduleViewSet(viewsets.ModelViewSet):
     # permission_classes = [permissions.AllowAny]
     queryset = Schedule.objects.all()
@@ -338,6 +402,10 @@ class ScheduleViewSet(viewsets.ModelViewSet):
         },
         'create,update,destroy,partial_update': {
             'education_department': True,
+        },
+        'today': {
+            'anon': True,
+            'user': True,
         }
     }
     
@@ -398,6 +466,21 @@ class ScheduleViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND,
             )
     
+    @action(detail=False, methods=['get'], url_path='today')
+    def today(self, request):
+        today = date.today()
+        schedules = self.queryset.filter(start_time__date=today)
+        # Prefetch lecturer to avoid N+1 queries
+        schedules = schedules.select_related('lecturer')
+        result = []
+        for schedule in schedules:
+            data = self.serializer_class(schedule).data
+            # Attach lecturer name
+            data['lecturer_name'] = schedule.lecturer.name if schedule.lecturer else None
+            result.append(data)
+        return Response(result)
+    
+    
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def me(self, request):
         try:
@@ -408,5 +491,119 @@ class ScheduleViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(schedules, many=True)
         return Response(serializer.data)
     
+
+class LecturerRecommendationViewSet(viewsets.ModelViewSet):
+    queryset = LecturerRecommendation.objects.all()
+    serializer_class = LecturerRecommendationSerializer
+    # permission_classes = [permissions.AllowAny]
+    view_permissions = {
+        'list': {
+            'anon': True,
+            'user': True,
+        },
+        'retrieve,update,create,destroy': {
+            'anon': True,
+            'user': True,
+        },
+        'me': {
+            'anon': True,
+            'user': True,
+        }
+    }
+
+    def list(self, request):
+        queryset = self.queryset.all()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
     
+    def retrieve(self, request, pk=None):
+        print("Retrieve called with pk:", pk)
+        try:
+            queryset = self.queryset.get(pk=pk)
+            serializer = self.serializer_class(queryset)
+            return Response(serializer.data)
+        except LecturerRecommendation.DoesNotExist:
+            return Response({"error": "Recommendation not found"}, status=404)
+    
+    
+    
+    def create(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    
+    def update(self, request, pk=None):
+        try:
+            recommendation = self.queryset.get(pk=pk)
+        except LecturerRecommendation.DoesNotExist:
+            return Response({"error": "Recommendation not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serializer_class(recommendation, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        # Log lỗi nếu có
+        print("Update failed:", serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def destroy(self, request, pk=None):
+        try:
+            recommendation = self.queryset.get(pk=pk)
+            recommendation.delete()
+            return Response(status=204)
+        except LecturerRecommendation.DoesNotExist:
+            return Response({"error": "Recommendation not found"}, status=404)
+    
+    @action(detail=False, methods=['get', 'post', 'put', 'patch', 'delete'])
+    def me(self, request):
+        try:
+            lecturer = Lecturer.objects.get(user=request.user)
+        except Lecturer.DoesNotExist:
+            return Response({"error": "Lecturer not found"}, status=404)
+
+        # GET: List all recommendations by this lecturer
+        if request.method == 'GET':
+            recommendations = LecturerRecommendation.objects.filter(recommender=lecturer)
+            serializer = self.get_serializer(recommendations, many=True)
+            return Response(serializer.data)
+
+        # POST: Create a new recommendation for this lecturer
+        if request.method == 'POST':
+            data = request.data.copy()
+            data['recommender'] = lecturer.id
+            serializer = self.get_serializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=201)
+            return Response(serializer.errors, status=400)
+
+        # PUT/PATCH: Update a recommendation by id (must belong to this lecturer)
+        if request.method in ['PUT', 'PATCH']:
+            rec_id = request.data.get('id')
+            if not rec_id:
+                return Response({"error": "Recommendation id required"}, status=400)
+            try:
+                recommendation = LecturerRecommendation.objects.get(id=rec_id, recommender=lecturer)
+            except LecturerRecommendation.DoesNotExist:
+                return Response({"error": "Recommendation not found"}, status=404)
+            serializer = self.get_serializer(recommendation, data=request.data, partial=(request.method == 'PATCH'))
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=400)
+
+        # DELETE: Delete a recommendation by id (must belong to this lecturer)
+        if request.method == 'DELETE':
+            rec_id = request.data.get('id')
+            if not rec_id:
+                return Response({"error": "Recommendation id required"}, status=400)
+            try:
+                recommendation = LecturerRecommendation.objects.get(id=rec_id, recommender=lecturer)
+            except LecturerRecommendation.DoesNotExist:
+                return Response({"error": "Recommendation not found"}, status=404)
+            recommendation.delete()
+            return Response(status=204)
     

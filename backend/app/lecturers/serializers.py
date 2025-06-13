@@ -57,3 +57,12 @@ class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
         fields = ("id", "start", "end", "title", 'classNames', 'lecturer', 'subject','place','notes')
+        
+class LecturerRecommendationSerializer(serializers.ModelSerializer):
+    subject_names = serializers.SerializerMethodField()
+    def get_subject_names(self, obj):
+        return [subject.name for subject in obj.subjects.all()]
+    class Meta:
+        model = LecturerRecommendation
+        fields = "__all__"
+        read_only_fields = ['id', 'date']

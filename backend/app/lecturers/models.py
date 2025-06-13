@@ -18,28 +18,27 @@ class Lecturer(models.Model):
     phone_number = models.CharField(max_length=20)
     gender = models.CharField(max_length=10)
     dob = models.DateField()
-    ethnic = models.CharField(max_length=20)
-    religion = models.CharField(max_length=30)
+    ethnic = models.CharField(max_length=20, blank=True)
+    religion = models.CharField(max_length=30, blank=True)
     hometown = models.CharField(max_length=100)
     degree = models.CharField(max_length=20)
     title = models.CharField(max_length=20, blank=True)
-    title_detail = models.CharField(max_length=100, blank=True)
+    title_detail = models.CharField(max_length=100)
     title_granted_at = models.DateField()
     address = models.CharField(max_length=100)
     work_position = models.CharField(max_length=100)
     workplace = models.CharField(max_length=100)
-    # Ngạch viên chức 
-    quota_code = models.CharField(max_length=200)
-    salary_coefficient = models.FloatField()
-    salary_coefficient_granted_at = models.DateField()
-    recruited_at = models.DateField()
-    years_of_experience = models.IntegerField()
-    exp_academic = models.JSONField(blank=True)
-    exp_language = models.TextField(blank=True)
-    exp_computer = models.TextField(blank=True)
-    exp_work = models.JSONField(blank=True)
-    researches = models.JSONField(blank=True)
-    published_works = models.JSONField(blank=True)
+    quota_code = models.CharField(max_length=200, blank=True)
+    salary_coefficient = models.FloatField(blank=True, null=True)
+    salary_coefficient_granted_at = models.DateField(blank=True, null=True)
+    recruited_at = models.DateField(blank=True, null=True)
+    years_of_experience = models.IntegerField(blank=True, null=True)
+    exp_academic = models.JSONField(blank=True, null=True)
+    exp_language = models.TextField(blank=True, null=True)
+    exp_computer = models.TextField(blank=True, null=True)
+    exp_work = models.JSONField(blank=True, null=True)
+    researches = models.JSONField(blank=True, null=True)
+    published_works = models.JSONField(blank=True, null=True)
     subjects = models.ManyToManyField('Subject')
     recommender = models.ForeignKey(
         'self',
@@ -49,9 +48,26 @@ class Lecturer(models.Model):
     )
     user = models.OneToOneField(CustomUser, null=True, blank=True, on_delete=models.SET_NULL)
     status = models.CharField(db_default="Chưa được duyệt", max_length=100)
+    date = models.DateField(auto_now_add=True)
   
     def __str__(self):
         return f"{self.name} - {self.workplace}"
+
+
+class LecturerRecommendation(models.Model):
+    name = models.CharField(max_length=30)
+    email = models.EmailField(max_length=100, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    workplace = models.CharField(max_length=100, blank=True, null=True)
+    recommender = models.ForeignKey(Lecturer, on_delete=models.CASCADE, related_name='recommended_by')
+    subjects = models.ManyToManyField(Subject, blank=True)
+    status = models.CharField(max_length=100, default="Chưa được duyệt")
+    content = models.TextField(max_length=1000)
+    date = models.DateField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.name} - {self.workplace}"
+
 
 class Evaluation(models.Model):
     title = models.CharField(max_length=200)
