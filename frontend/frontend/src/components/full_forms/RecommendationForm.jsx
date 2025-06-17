@@ -19,18 +19,22 @@ import MyMultiSelectField from "../forms/MyMultiSelectField";
 
 export default function RecommendationForm({ recommendation, submission }) {
   const [subjects, setSubjects] = useState([]);
-  const typeOptions = [
+  const role = localStorage.getItem("Role") || ""; // Get role from local storage
+  const isChecking = role === "it_faculty" || role === "education_department";
+  const statusOptions = [
     {
       id: "1",
-      value: "Đánh giá từ cán bộ đào tạo",
-      label: "Cán bộ đánh giá",
+      value: "Chưa được duyệt",
+      label: "Chưa được duyệt",
     },
     {
       id: "2",
-      value: "Phản ánh từ sinh viên",
-      label: "Cán bộ đánh giá",
+      value: "Đang liên hệ",
+      label: "Đang liên hệ",
     },
-    { id: "3", value: "Khác", label: "Khác" },
+    {id: "3", value: "Đã đăng ký", label: "Đã duyệt" },
+    
+    { id: "4", value: "Đã từ chối", label: "Đã từ chối" },
   ];
 
   const schema = yup.object().shape({
@@ -76,6 +80,7 @@ export default function RecommendationForm({ recommendation, submission }) {
         workplace: recommendation.workplace,
         email: recommendation.email,
         phone_number: recommendation.phone_number,
+        status: recommendation.status,
       };
       reset(formValues);
     }
@@ -96,6 +101,7 @@ export default function RecommendationForm({ recommendation, submission }) {
             className="formField"
             label={"Tên giảng viên được giới thiệu"}
             name="name"
+            disabled={isChecking}
             control={control}
           />
         </Box>
@@ -105,6 +111,7 @@ export default function RecommendationForm({ recommendation, submission }) {
             label={"Email"}
             name="email"
             control={control}
+            disabled={isChecking}
           />
         </Box>
         <Box className="formArea" sx={{ width: "100%", gridColumn: "span 2" }}>
@@ -112,6 +119,7 @@ export default function RecommendationForm({ recommendation, submission }) {
             className="formField"
             label={"Số điện thoại"}
             name="phone_number"
+            disabled={isChecking}
             control={control}
           />
         </Box>
@@ -120,6 +128,7 @@ export default function RecommendationForm({ recommendation, submission }) {
             className="formField"
             label={"Nơi công tác"}
             name="workplace"
+            disabled={isChecking}
             control={control}
           />
         </Box>
@@ -129,6 +138,7 @@ export default function RecommendationForm({ recommendation, submission }) {
             label={"Các môn học giảng dạy"}
             name="subjects"
             options={subjects}
+            disabled={isChecking}
             control={control}
           />
         </Box>
@@ -139,9 +149,22 @@ export default function RecommendationForm({ recommendation, submission }) {
             label={"Mô tả sơ bộ về giảng viên (bằng cấp, kinh nghiệm, v.v.)"}
             name="content"
             rows={4}
+            disabled={isChecking}
             control={control}
           />
         </Box>
+        
+          <Box className="formArea" sx={{ width: "100%", gridColumn: "span 4" }}>
+            <MySelectField
+              className="formField"
+              label={"Tình trạng hồ sơ"}
+              name="status"
+              options={statusOptions}
+              control={control}
+              disabled={!isChecking}
+            />
+          </Box>
+        
 
         <Box className="formArea" sx={{ gridColumn: "span 4", width: "100%" }}>
           <MyButton type="submit" fullWidth label={"Submit"}></MyButton>

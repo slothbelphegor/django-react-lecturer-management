@@ -36,15 +36,7 @@ const ListSubject = () => {
         accessorKey: "credits",
         header: "Số tín chỉ",
       },
-      {
-        accessorKey: "description",
-        header: "Mô tả",
-        // max length of 50 characters
-        Cell: ({ cell }) => {
-          const value = cell.getValue();
-          return value.length > 50 ? value.slice(0, 50) + "..." : value;
-        },
-      },
+      
     ],
     []
   );
@@ -82,6 +74,17 @@ const ListSubject = () => {
       <MaterialReactTable
         columns={columns}
         data={subjects}
+        enableExpanding={true}
+        renderDetailPanel={({ row }) => (
+          <Box sx={{ padding: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              {"Mô tả môn học:"}
+            </Typography>
+            <Typography variant="body2">
+              {row.original.description || "Chưa có mô tả"}
+            </Typography>
+          </Box>
+        )}
         enableRowActions
         positionActionsColumn={"last"}
         renderRowActions={({ row }) =>

@@ -168,6 +168,20 @@ export default function Menu() {
                     </ListItemIcon>
                     <ListItemText primary="Danh sách đăng ký thỉnh giảng" />
                   </ListItemButton>
+                  {role === "it_faculty" && (
+                  <ListItemButton
+                    component={Link}
+                    to="/recommendations"
+                    selected={"/recommendations" === path}
+                    sx={{ pl: 4 }}
+                  >
+                    <ListItemIcon>
+                      <RecommendIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Danh sách đề xuất thỉnh giảng" />
+                  </ListItemButton>
+                  )}
+                  
                 </>
               }
             </List>

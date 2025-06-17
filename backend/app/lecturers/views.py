@@ -30,7 +30,7 @@ class LecturerViewSet(viewsets.ModelViewSet):
         },
         'list': {
             'lecturer': True,
-            'potential_lecturer': False,
+            'potential_lecturer': True,
             'it_faculty': True,
             'education_department': True,
             'supervision_department': True,
@@ -65,7 +65,7 @@ class LecturerViewSet(viewsets.ModelViewSet):
         lecturer_group = Group.objects.filter(name='lecturer').first()
         queryset = Lecturer.objects.filter(
             Q(user__groups=lecturer_group) |
-            Q(user=None)
+            Q(status="Đã ký hợp đồng")
         )
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
@@ -89,10 +89,15 @@ class LecturerViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def degree_count(self, request):
         # Total number of lecturers
-        total = Lecturer.objects.count()
+        lecturer_group = Group.objects.filter(name='lecturer').first()
+        queryset = Lecturer.objects.filter(
+            Q(user__groups=lecturer_group) |
+            Q(status="Đã ký hợp đồng") 
+        )
+        total = queryset.count()
         # Group by degree and count lecturers
         data = (
-            Lecturer.objects.values('degree')
+            queryset.values('degree')
             .annotate(count=Count('id'))
             .order_by('-count')
         )
@@ -110,10 +115,15 @@ class LecturerViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def title_count(self, request):
         # Total number of lecturers
-        total = Lecturer.objects.count()
+        lecturer_group = Group.objects.filter(name='lecturer').first()
+        queryset = Lecturer.objects.filter(
+            Q(user__groups=lecturer_group) |
+            Q(status="Đã ký hợp đồng") 
+        )
+        total = queryset.count()
         # Group by title and count lecturers
         data = (
-            Lecturer.objects.values('title')
+            queryset.values('title')
             .annotate(count=Count('id'))
             .order_by('-count')
         )
@@ -241,7 +251,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
     view_permissions = {
         'list': {
             'lecturer': True,
-            'potential_lecturer': False,
+            'potential_lecturer': True,
             'it_faculty': True,
             'education_department': True,
             'supervision_department': True,
@@ -262,8 +272,18 @@ class SubjectViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='lecturer_count')
     def lecturer_count(self, request):
+        lecturer_group = Group.objects.filter(name='lecturer').first()
+        # Filter lecturers in the 'lecturer' group
+        lecturer_queryset = Lecturer.objects.filter(
+            Q(user__groups=lecturer_group) |
+            Q(status="Đã ký hợp đồng")
+        )
+        # Annotate each subject with the count of lecturers in the filtered queryset
         subjects = Subject.objects.annotate(
-            lecturer_count=Count('lecturer')
+            lecturer_count=Count(
+                'lecturer',
+                filter=Q(lecturer__in=lecturer_queryset)
+            )
         ).values('name', 'lecturer_count')
         return Response(list(subjects))
     
@@ -495,14 +515,12 @@ class ScheduleViewSet(viewsets.ModelViewSet):
 class LecturerRecommendationViewSet(viewsets.ModelViewSet):
     queryset = LecturerRecommendation.objects.all()
     serializer_class = LecturerRecommendationSerializer
-    # permission_classes = [permissions.AllowAny]
     view_permissions = {
         'list': {
             'anon': True,
             'user': True,
         },
         'retrieve,update,create,destroy': {
-            'anon': True,
             'user': True,
         },
         'me': {

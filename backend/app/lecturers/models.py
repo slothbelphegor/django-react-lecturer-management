@@ -5,7 +5,7 @@ from users.models import CustomUser
 
 class Subject(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField(max_length=200)
+    description = models.TextField(max_length=1000, blank=True)
     credits = models.IntegerField()
 
     def __str__(self):

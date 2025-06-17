@@ -31,13 +31,13 @@ const EditSubject = () => {
   }, []); // get data on initial load page
 
   const schema = yup.object().shape({
-    name: yup.string().required("Name is required"),
-    description: yup.string().required("Description is required"),
-    // credits: yup
-    //   .number()
-    //   .typeError("Credit must be a number")
-    //   .positive("Credit must be a positive number")
-    //   .required("Credit is required"),
+    name: yup.string().required("Chưa nhập tên môn học"),
+    credits: yup
+          .number()
+          .typeError("Số tín chỉ phải là số")
+          .positive("Số tín chỉ phải là số dương")
+          .integer("Số tín chỉ phải là số nguyên")
+          .min(1, "Số tín chỉ tối thiểu là 1"),
   });
 
   const resolvedSchema = yupResolver(schema);

@@ -5,50 +5,13 @@ import MyPieChart from "../components/charts/PieChart";
 import PeopleIcon from '@mui/icons-material/People';
 import MyBarChart from "../components/charts/BarChart";
 import MyChartBox from "../components/charts/ChartBox";
+import StaffHome from "./home/StaffHome";
+import PotentialHome from "./home/PotentialHome";
 
 const Home = () => {
-  const [myData, setMyData] = useState();
-  const [loading, setLoading] = useState(true);
-  const [subjectLecturerCount, setSubjectLecturerCount] = useState([]);
-  const [degreeLecturerCount, setDegreeLecturerCount] = useState([]);
-  const [titleLecturerCount, setTitleLecturerCount] = useState([]);
-  const lecturerCountData = [];
-  const getData = () => {
-    AxiosInstance.get(`subjects/lecturer_count/`)
-      .then((res) => {
-        setSubjectLecturerCount(res.data);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-    AxiosInstance.get(`lecturers/degree_count/`)
-      .then((res) => {
-        setDegreeLecturerCount(res.data)
-        console.log(res.data);
-      })
-      .catch((error) => {
-        console.log(error.response.data);
-      })
-    AxiosInstance.get(`lecturers/title_count/`)
-      .then((res) => {
-        setTitleLecturerCount(res.data);
-      })
-      .catch((error) => {
-        console.log(error.response.data);
-      });
-  };
-
-  useEffect(() => {
-    getData();
-  }, []); // get data on initial load page
+  const role = localStorage.getItem("Role") || "";
   return (
     <div>
-      {/* <MyPieChart myData={subjectLecturerCount?.map((item) => {
-                return {
-                    value: item.lecturer_count,
-                    label: item.name
-                }
-            })}/> */}
       <Box
         className="topbar"
         sx={{
@@ -61,32 +24,22 @@ const Home = () => {
             sx={{ marginLeft: "15px", fontWeight: "bold" }}
             variant="heading"
           >
-            Xin chào, chào mừng bạn đến với hệ thống quản lý giảng viên!
+            Chào mừng bạn đến với hệ thống quản lý giảng viên!
           </Typography>
         </Box>
         <Box></Box>
       </Box>
-      <MyChartBox 
-        icon1={<PeopleIcon />}
-        title1="Số lượng giảng viên theo môn học"
-        chart1={<MyBarChart myData={subjectLecturerCount}/>}
-        icon2={<PeopleIcon />}
-        title2="Tỉ lệ trình độ giảng viên"
-        chart2={<MyPieChart myData={degreeLecturerCount?.map((item) => {
-          return {
-            value: item.percentage,
-            label: item.degree
-          }
-        })}/>}
-        icon3={<PeopleIcon/>}
-        title3="Tỉ lệ học vị giảng viên"
-        chart3={<MyPieChart myData={titleLecturerCount?.map((item) => {
-          return {
-            value: item.percentage,
-            label: item.title
-          }
-        })}/>}
-        />
+      {['it_faculty', 'education_department', 'supervision_department','lecturer'].includes(role) && (
+        <StaffHome/>
+      )}
+      {role === 'potential_lecturer' && (
+        <PotentialHome/>
+      )}
+      {role === 'lecturer' && (
+        <Typography variant="h6" sx={{ textAlign: "center", margin: "20px 0" }}>
+          
+        </Typography>
+      )}
         
 
     </div>

@@ -16,6 +16,7 @@ const EditLecturer = () => {
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState("");
   const [lecturers, setLecturers] = useState([]);
+  
 
   const getData = () => {
 
@@ -57,20 +58,20 @@ const EditLecturer = () => {
       } : null,
     }
     
-    const workExperiences = data.workExperiences.map((exp) => ({
+    const workExperiences = data.workExperiences?.map((exp) => ({
       organization: exp.organization,
       from: format(new Date(exp.from), 'yyyy-MM-dd'),
       to: format(new Date(exp.to), 'yyyy-MM-dd'),
     }));
 
-    const researches = data.researches.map((research) => ({
+    const researches = data.researches?.map((research) => ({
       name: research.name,
       year: research.year,
       position: research.position,
       level: research.level,
     }));
 
-    const publishedWorks = data.publishedWorks.map((work) => ({
+    const publishedWorks = data.publishedWorks?.map((work) => ({
       name: work.name,
       year: work.year,
       place: work.place,

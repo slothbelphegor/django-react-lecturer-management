@@ -60,6 +60,8 @@ class ScheduleSerializer(serializers.ModelSerializer):
         
 class LecturerRecommendationSerializer(serializers.ModelSerializer):
     subject_names = serializers.SerializerMethodField()
+    recommender_details = RecommenderSerializer(
+        source='recommender', read_only=True, required=False)
     def get_subject_names(self, obj):
         return [subject.name for subject in obj.subjects.all()]
     class Meta:

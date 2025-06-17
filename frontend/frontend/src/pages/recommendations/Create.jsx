@@ -38,17 +38,20 @@ const CreateRecommendation = () => {
 
 
   const submission = (data) => {
-    AxiosInstance.post("recommendations/", {
+    console.log(data)
+    const sentData = {
       name: data.name,
       date: format(new Date(data.date), 'yyyy-MM-dd'),
       email: data.email,
-        phone_number: data.phone_number,
-        content: data.content,
-        workplace: data.workplace,
-        recommender: currentLecturer.id,
-        status: data.status,
-        subjects: data.subjects,
-    })
+      phone_number: data.phone_number,
+      content: data.content,
+      workplace: data.workplace,
+      recommender: currentLecturer.id,
+      status: "Chưa được duyệt",
+      subjects: data.subjects,
+    }
+    
+    AxiosInstance.post("recommendations/me/", sentData)
       .then(() => {
         setIsError(false);
         setMessage("Thêm đề xuất thành công.");

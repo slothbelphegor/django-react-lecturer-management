@@ -41,7 +41,7 @@ const CreateLecturer = () => {
             degree_granted_at: format(new Date(data.degree_granted_at_TS), 'yyyy-MM-dd'),
           } : null,
         }
-        const workExperiences = data.workExperiences.map((exp) => ({
+        const workExperiences = data.workExperiences?.map((exp) => ({
               organization: exp.organization,
               from: format(new Date(exp.from), 'yyyy-MM-dd'),
               to: format(new Date(exp.to), 'yyyy-MM-dd'),

@@ -1,5 +1,5 @@
 import AxiosInstance from "../../components/AxiosInstance";
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
@@ -24,33 +24,44 @@ const EditUser = () => {
   const [message, setMessage] = useState("");
   const [lecturers, setLecturers] = useState()
   const [groups, setGroups] = useState([])
+  const [isLoadingLecturer, setIsLoadingLecturer] = useState(true);
+  const [isLoadingGroups, setIsLoadingGroups] = useState(true);
+  const [isLoadingCurrentUser, setIsLoadingCurrentUser] = useState(true);
   
   const getData = () => {
     AxiosInstance.get('lecturers/all/').then((res) => {
       setLecturers(res.data)
+      setIsLoadingLecturer(false);
       console.log(res.data)
     })
     AxiosInstance.get(`users/${user_id}/`).then((res) => {
       setCurrentUser(res.data);
+      setIsLoadingCurrentUser(false);
       console.log(res.data)
     });
     AxiosInstance.get("groups/").then((res) => {
+      setIsLoadingGroups(false);
       setGroups(res.data)
     })
     
   };
 
 
-  const lecturerOptions = lecturers
+const lecturerOptions = useMemo(() =>
+  lecturers
     ?.filter(l => !l.user || l.user == currentUser.id || l.id === currentUser.lecturer)
-    .map(l => ({ value: l.id, id: l.id, showValue: `${l.name} - ${l.workplace}` }));
-
+    .map(l => ({ value: l.id, id: l.id, showValue: `${l.name} - ${l.workplace}` })) || [],
+  [lecturers, currentUser]
+);
   console.log(lecturerOptions)
-  const groupOptions = groups?.map((group) => ({
-      id: group.id,
-      value: group.id,
-      showValue: `${group.name}`,
-  }));
+  const groupOptions = useMemo(() =>
+  groups?.map((group) => ({
+    id: group.id,
+    value: group.id,
+    showValue: `${group.name}`,
+  })) || [],
+  [groups]
+);
   
   const {  control, handleSubmit, watch, reset  } = useForm({
     // values: {
@@ -65,15 +76,14 @@ const EditUser = () => {
 
   useEffect(() => {
       getData();
-    }, []); // get data on initial load page
+  }, []); // get data on initial load page
   
   // Reset form when all data is loaded and stable
   useEffect(() => {
-    console.log(lecturerOptions)
     if (
       currentUser &&
       groups.length &&
-      lecturerOptions &&
+      lecturerOptions?.length &&
       groupOptions?.length // ensure groupOptions is ready
     ) {
       const formValues = {
@@ -88,7 +98,7 @@ const EditUser = () => {
     }
     // Only depend on reset, currentUser, groups, lecturerOptions, groupOptions
     // This will NOT cause an infinite loop because getData is not called here
-  }, [currentUser, groups, reset]);
+  }, [currentUser, groups, reset, lecturerOptions, groupOptions]);
 
 
   const selectedGroup = watch("group");
@@ -140,6 +150,11 @@ const EditUser = () => {
       <form onSubmit={handleSubmit(submission,
       (errors) => console.log("Validation Errors:", errors)
     )}>
+      {(isLoadingCurrentUser || isLoadingGroups || isLoadingLecturer ) ? (
+        <Box sx={{ textAlign: "center", marginTop: "20px" }}>
+          <Typography variant="body1">Loading...</Typography>
+        </Box>
+      ) : (
         <Box
           className="formBox"
           sx={{
@@ -209,6 +224,9 @@ const EditUser = () => {
             <MyButton type="submit" fullWidth label={"Submit"}></MyButton>
           </Box>
         </Box>
+      )
+      }
+        
       </form>
     </div>
   );

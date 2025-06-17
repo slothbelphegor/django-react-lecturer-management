@@ -168,22 +168,12 @@ export default function LecturerInfoForm( {lecturer, submission, isSelfLecturer,
         address: yup.string().required("Chưa nhập nơi ở hiện nay"),
         workplace: yup.string().required("Chưa nhập đơn vị công tác"),
         work_position: yup.string().required("Chưa nhập chức vụ"),
-        quota_code: yup.string().required("Chưa nhập ngạch viên chức"),
         other_quota_code: yup.string().when("quota_code", {
           is: (value) => value === "Khác (nhập cụ thể)", // Ensure the condition checks for the exact value
           then: () => yup.string().required("Chưa nhập ngạch viên chức khác"),
           otherwise: () => yup.string().notRequired(), // Ensure the field is not required if the condition is not met
         }),
-        salary_coefficient: yup.number().typeError("Hệ số lương không hợp lệ"),
-        salary_coefficient_granted_at: yup
-          .date()
-          .typeError("Chưa chọn tháng năm xếp hệ số lương"),
-        recruited_at: yup
-          .date()
-          .typeError("Chưa chọn ngày tháng năm được tuyển dụng"),
-        years_of_experience: yup
-          .number()
-          .typeError("Thâm niên giảng dạy không hợp lệ"),
+        
         school_name_CN: yup.string().required("Chưa nhập nơi đào tạo"),
         major_CN: yup.string().required("Chưa nhập chuyên ngành"),
         from_CN: yup.date().typeError("Chưa chọn tháng năm"),

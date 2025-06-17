@@ -35,12 +35,12 @@ const ListLecturer = () => {
         header: "Tên",
       },
       {
-        accessorKey: "email",
-        header: "Email",
+        accessorKey: "degree",
+        header: "Học vị",
       },
       {
-        accessorKey: "phone_number",
-        header: "Số điện thoại",
+        accessorKey: "title",
+        header: "Học hàm",
       },
       {
         accessorKey: "workplace",
@@ -61,6 +61,21 @@ const ListLecturer = () => {
             ))}
           </div>
         ),
+        filterFn: (row, columnId, filterValue) => {
+          const subjectNames = row.getValue(columnId) || [];
+          if (!filterValue) return true;
+          // filterValue can be a string or array, depending on your filter UI
+          if (Array.isArray(filterValue)) {
+            // Multi-select: check if any selected subject is in the row's subjects
+            return filterValue.some(val =>
+              subjectNames.some(subject => subject.toLowerCase().includes(val.toLowerCase()))
+            );
+          }
+          // Single string: check if any subject includes the filter string
+          return subjectNames.some(subject =>
+            subject.toLowerCase().includes(filterValue.toLowerCase())
+          );
+        },
       },
       {
         accessorKey: "recommender_details.full_name",
@@ -110,10 +125,8 @@ const ListLecturer = () => {
         data={lecturers} // Nap du lieu vao bang
         initialState={{
           columnVisibility: {
-            id: false,
-            address: false,
-            phone_number: false,
-            email: false,
+            degree: false,
+            title: false,
             "recommender_details.full_name": false,
           },
         }}

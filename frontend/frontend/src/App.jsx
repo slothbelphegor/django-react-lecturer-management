@@ -98,6 +98,10 @@ function App() {
                     <Route path="/documents/create" element={<CreateDocument/>}></Route>
                     <Route path="/documents/delete/:id" element={<DeleteDocument />}/>
                     <Route path="/documents/edit/:id" element={<EditDocument />}/>
+                    <Route path="/documents/edit/:id" element={<EditDocument />}/>
+                    <Route path="/recommendations" element={<ListRecommendation/>}></Route>
+                    <Route path="/recommendations/edit/:id" element={<EditRecommendation/>}></Route>
+                    <Route path="/recommendations/delete/:id" element={<DeleteRecommendation/>}></Route>
                   </Route> 
                   <Route path="/documents" element={<ListDocument/>}></Route>
                   <Route element={<AllowedRoute allowedRoles={['education_department']}/>}>

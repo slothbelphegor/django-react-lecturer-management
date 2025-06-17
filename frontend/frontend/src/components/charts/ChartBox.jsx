@@ -7,12 +7,14 @@ export default function MyChartBox(props) {
     <>
     <Grid2 container
         sx={{width: "100%", display: "flex", minHeight: "200px", boxShadow: 3, justifyContent: "space-evenly"}}>
+            {chart1 ? 
             <Grid2 
               item xs={12} sm={12} md={6} lg={4}
               sx={{
                 minHeight: "200px",
                 padding: "20px",
                 borderRight: "1px solid #d3d3d3",
+                width: "100%",
               }}>
                 <Box sx={{
                   marginBottom: "20px",
@@ -28,6 +30,8 @@ export default function MyChartBox(props) {
                 <Box>{chart1}</Box>
 
             </Grid2>
+            : null}
+            {chart2 ? 
             <Grid2 
               item xs={12} sm={12} md={6} lg={4}
               sx={{
@@ -49,6 +53,8 @@ export default function MyChartBox(props) {
                 <Box>{chart2}</Box>
 
             </Grid2>
+            : null}
+            {chart3 ? 
             <Grid2 
               item xs={12} sm={12} md={6} lg={4}
               sx={{
@@ -69,6 +75,8 @@ export default function MyChartBox(props) {
                 <Box>{chart3}</Box>
 
             </Grid2>
+            : null}
+            
     </Grid2>
     </>
   );

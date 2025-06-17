@@ -40,12 +40,12 @@ const ListPotentialLecturer = () => {
         'header': "Ngày đăng ký"
       },
       {
-        accessorKey: "email",
-        header: "Email",
+        accessorKey: "degree",
+        header: "Học vị",
       },
       {
-        accessorKey: "phone_number",
-        header: "Số điện thoại",
+        accessorKey: "title",
+        header: "Học hàm",
       },
       {
         accessorKey: "workplace",
@@ -109,8 +109,8 @@ const ListPotentialLecturer = () => {
         initialState={{
           columnVisibility: {
             id: false,
-            address: false,
-            phone_number: false,
+            degree: false,
+            title: false,
             email: false,
             date: true,
             "recommender_details.full_name": false,

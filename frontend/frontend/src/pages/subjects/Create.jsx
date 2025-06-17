@@ -18,7 +18,6 @@ const CreateSubject = () => {
 
   const schema = yup.object().shape({
     name: yup.string().required("Chưa nhập tên môn học"),
-    description: yup.string().required("Chưa nhập mô tả môn học"),
     credits: yup
       .number()
       .typeError("Số tín chỉ phải là số")
