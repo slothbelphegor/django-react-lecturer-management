@@ -99,7 +99,7 @@ const EditLecturer = () => {
       workplace: data.workplace,
       quota_code: data.quota_code === "Khác (nhập cụ thể)" ? data.other_quota_code : data.quota_code,
       salary_coefficient: data.salary_coefficient,
-      salary_coefficient_granted_at: format(new Date(data.salary_coefficient_granted_at), 'yyyy-MM-dd'),
+      salary_coefficient_granted_at: format(new Date(data.salary_coefficient_granted_at || null), 'yyyy-MM-dd'),
       recruited_at: format(new Date(data.recruited_at), 'yyyy-MM-dd'),
       years_of_experience: data.years_of_experience,
       exp_language: data.exp_language,

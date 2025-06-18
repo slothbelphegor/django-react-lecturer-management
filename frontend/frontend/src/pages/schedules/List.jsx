@@ -217,6 +217,9 @@ const ListSchedule = () => {
     // Parse dates and weekday
     const fromDate = data.from_date;
     const toDate = data.to_date;
+    const selectedSubjectId = subjects.find(
+          (subject) => subject.name == data.subject
+        ).id;
     const weekday = fromDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
 
@@ -224,6 +227,7 @@ const ListSchedule = () => {
     const schedulesToDelete = schedules.filter((schedule) => {
       const scheduleDate = schedule.start;
       return (
+        schedule.subject == selectedSubjectId &&
         (isAfter(scheduleDate, fromDate) || isSameDay(scheduleDate, fromDate)) &&
         (isBefore(scheduleDate, toDate) || isSameDay(scheduleDate, toDate)) &&
         getDay(scheduleDate) === weekday

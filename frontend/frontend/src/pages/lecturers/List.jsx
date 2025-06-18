@@ -178,7 +178,7 @@ const ListLecturer = () => {
         enableExpanding
         renderDetailPanel={({ row }) => (
           <Box sx={{ padding: 2, display: "flex", flexDirection: "column" }}>
-            <Typography variant="h6">Thông tin chi tiết</Typography>
+            <Typography variant="h6">Thông tin liên lạc</Typography>
             <Typography variant="body1">
               <strong>Tên:</strong> {row.original.name}
             </Typography>
@@ -190,9 +190,6 @@ const ListLecturer = () => {
             </Typography>
             <Typography variant="body1">
               <strong>Nơi công tác:</strong> {row.original.workplace}
-            </Typography>
-            <Typography variant="body1">
-              <strong>Môn học:</strong> {row.original.subject_names.join(", ")}
             </Typography>
           </Box>
         )}

@@ -4,6 +4,7 @@ import { Box, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import AddNewIcon from "@mui/icons-material/AddBox";
+import InfoIcon from '@mui/icons-material/Info';
 import MyTextField from "../../components/forms/MyTextField";
 import MyButton from "../../components/forms/MyButton";
 import MyDescriptionField from "../../components/forms/MyDescriptionField";
@@ -79,7 +80,7 @@ const EditSubject = () => {
   return (
     <div>
       <Box className="topbar">
-        <AddNewIcon />
+        <InfoIcon />
         <Typography
           sx={{ marginLeft: "15px", fontWeight: "bold" }}
           variant="subtitle2"

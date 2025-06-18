@@ -59,6 +59,7 @@ export default function ScheduleInfoForm({
     end: yup.string().required("Chưa chọn giờ kết thúc"),
     from_date: yup.date().typeError("Chưa chọn ngày bắt đầu"),
     to_date: yup.date().typeError("Chưa chọn ngày kết thúc"),
+    place: yup.string().required("Chưa chọn phòng học")
   });
 
   const resolvedSchema = yupResolver(schema);

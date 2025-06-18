@@ -3,7 +3,7 @@ import { React, useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import {format} from "date-fns";
 import { useParams, useNavigate } from "react-router-dom";
-import AddNewIcon from "@mui/icons-material/AddBox";
+import EditIcon from '@mui/icons-material/Edit';
 import MyMessage from "../../components/Message";
 import EvaluationForm from "../../components/full_forms/EvaluationForm";
 
@@ -58,7 +58,7 @@ export default function EditEvaluation() {
     return (
         <div>
             <Box className="topbar">
-                <AddNewIcon />
+                <EditIcon />
                 <Typography
                 sx={{ marginLeft: "15px", fontWeight: "bold" }}
                 variant="subtitle2"
