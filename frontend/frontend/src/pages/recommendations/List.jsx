@@ -5,7 +5,7 @@ import AxiosInstance from "../../components/AxiosInstance";
 
 import { Box, IconButton, Typography, Grid } from "@mui/material";
 import CalendarViewMonthIcon from "@mui/icons-material/CalendarViewMonth";
-import EditIcon from "@mui/icons-material/Edit";
+import InfoIcon from '@mui/icons-material/Info';
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import MyButton from "../../components/forms/MyButton";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -122,7 +122,7 @@ const ListRecommendation = () => {
               component={Link}
               to={`/recommendations/edit/${row.original.id}`}
             >
-              <EditIcon />
+              <InfoIcon />
             </IconButton>
             <IconButton
               color="error"

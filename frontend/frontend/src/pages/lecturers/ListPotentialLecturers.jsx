@@ -99,7 +99,7 @@ const ListPotentialLecturer = () => {
             sx={{ marginLeft: "15px", fontWeight: "bold" }}
             variant="subtitle2"
           >
-            Danh sách giảng viên
+            Danh sách giảng viên đăng ký thỉnh giảng
           </Typography>
         </Box>
       </Box>

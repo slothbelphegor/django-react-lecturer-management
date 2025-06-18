@@ -9,7 +9,7 @@ import MyMultiSelectField from "../../components/forms/MyMultiSelectField";
 import MyDateTimeField from "../../components/forms/MyDateTimeField";
 import MyModal from "../../components/utils/MyModal";
 import ScheduleInfoForm from "../../components/full_forms/ScheduleInfoForm";
-
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
@@ -99,8 +99,6 @@ const ListSchedule = () => {
   }));
 
   
-
-  console.log(filteredSchedules);
 
   
 
@@ -302,7 +300,7 @@ const ListSchedule = () => {
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <CalendarViewMonthIcon />
+          <CalendarMonthIcon />
           <Typography
             sx={{ marginLeft: "15px", fontWeight: "bold" }}
             variant="subtitle2"

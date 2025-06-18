@@ -9,7 +9,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import InfoIcon from '@mui/icons-material/Info';
 import MyButton from "../../components/forms/MyButton";
 import { MaterialReactTable } from "material-react-table";
 
@@ -134,15 +134,16 @@ const ListLecturer = () => {
         positionActionsColumn={"last"}
         renderRowActions={({ row }) => (
           <Box sx={{ display: "flex", flexWrap: "nowrap", gap: "8px" }}>
-            {currentRole === "education_department" && 
+            {["it_faculty", "education_department"].includes(currentRole) && 
             <>
             <IconButton
               color="primary"
               component={Link}
               to={`/lecturers/edit/${row.original.id}`}
             >
-              <EditIcon />
+              <InfoIcon />
             </IconButton>
+            
             </>}
             {["it_faculty", "supervision_department"].includes(currentRole) && (
             <IconButton

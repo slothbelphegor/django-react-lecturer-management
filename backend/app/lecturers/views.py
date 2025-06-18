@@ -35,10 +35,13 @@ class LecturerViewSet(viewsets.ModelViewSet):
             'education_department': True,
             'supervision_department': True,
         },
-        'retrieve,update,create,destroy,all': {
+        'retrieve,all': {
             'education_department': True,
             'it_faculty': True,
-            'supervision_department': True,
+            'supervision_department': True
+        },
+        'create,update,destroy': {
+          'education_department': True  
         },
         'potential_lecturers': {
             'it_faculty': True,
@@ -517,15 +520,14 @@ class LecturerRecommendationViewSet(viewsets.ModelViewSet):
     serializer_class = LecturerRecommendationSerializer
     view_permissions = {
         'list': {
-            'anon': True,
-            'user': True,
+            'it_faculty': True
         },
-        'retrieve,update,create,destroy': {
-            'user': True,
+        'retrieve,update': {
+            'lecturer': True,
+            'it_faculty': True
         },
-        'me': {
-            'anon': True,
-            'user': True,
+        'create,destroy,me': {
+            'lecturer': True
         }
     }
 

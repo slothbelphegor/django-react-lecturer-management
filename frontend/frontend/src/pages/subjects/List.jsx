@@ -6,6 +6,7 @@ import AxiosInstance from "../../components/AxiosInstance";
 import { Box, Chip, IconButton, Typography } from "@mui/material";
 import CalendarViewMonthIcon from "@mui/icons-material/CalendarViewMonth";
 import EditIcon from "@mui/icons-material/Edit";
+import InfoIcon from '@mui/icons-material/Info';
 import DeleteIcon from "@mui/icons-material/Delete";
 import MyButton from "../../components/forms/MyButton";
 import { MaterialReactTable } from "material-react-table";
@@ -95,7 +96,7 @@ const ListSubject = () => {
                 component={Link}
                 to={`/subjects/edit/${row.original.id}`}
               >
-                <EditIcon />
+                <InfoIcon />
               </IconButton>
               <IconButton
                 color="error"

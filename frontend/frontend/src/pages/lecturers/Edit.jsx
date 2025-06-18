@@ -11,6 +11,7 @@ import LecturerInfoForm from "../../components/full_forms/LecturerInfoForm"
 const EditLecturer = () => {
   const params = useParams();
   const lecturer_id = params.id;
+  const role = localStorage.getItem("Role")
   const [currentLecturer, setCurrentLecturer] = useState({});
   const [showMessage, setShowMessage] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -146,7 +147,8 @@ const EditLecturer = () => {
         </Typography>
       </Box>
       
-      <LecturerInfoForm lecturer={currentLecturer} submission={submission}/>
+      <LecturerInfoForm lecturer={currentLecturer} submission={submission} 
+        readOnly={!(role == "education_department")} isSelfLecturer={!(role == "education_department")}/>
       {showMessage ? (
         <MyMessage
           text={message}

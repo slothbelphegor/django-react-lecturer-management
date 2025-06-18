@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { Link, useParams } from "react-router-dom";
-import AddNewIcon from "@mui/icons-material/AddBox";
+import InfoIcon from '@mui/icons-material/Info';
 import MyTextField from "../../components/forms/MyTextField";
 import MyButton from "../../components/forms/MyButton";
 import MyMessage from "../../components/Message";
@@ -132,7 +132,7 @@ const lecturerOptions = useMemo(() =>
   return (
     <div>
       <Box className="topbar">
-        <AddNewIcon />
+        <InfoIcon />
         <Typography
           sx={{ marginLeft: "15px", fontWeight: "bold" }}
           variant="subtitle2"

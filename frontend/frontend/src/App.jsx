@@ -74,7 +74,7 @@ function App() {
                   <Route path="/lecturers" element={<ListLecturer />}/>
                   <Route element={<AllowedRoute allowedRoles={['education_department']}/>}>
                     <Route path="/lecturers/create" element={<CreateLecturer />}/>
-                    <Route path="/lecturers/edit/:id" element={<EditLecturer />}/>
+                    
                     <Route path="/lecturers/delete/:id" element={<DeleteLecturer />}/>
                   </Route>
                   <Route element={<AllowedRoute allowedRoles={['it_faculty', 'education_department']}/>}>
@@ -92,6 +92,7 @@ function App() {
                   <Route path="/potential_lecturers" element={<ListPotentialLecturer />} />
                   <Route path="/subjects" element={<ListSubject/>}></Route>
                   <Route element={<AllowedRoute allowedRoles={['education_department', 'it_faculty']}/>}>
+                    <Route path="/lecturers/edit/:id" element={<EditLecturer />}/>  
                     <Route path="/subjects/create" element={<CreateSubject/>}></Route>
                     <Route path="/subjects/edit/:id" element={<EditSubject />}/>
                     <Route path="/subjects/delete/:id" element={<DeleteSubject />}/>

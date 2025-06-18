@@ -4,6 +4,7 @@ import { Box, Typography } from "@mui/material";
 import {format} from "date-fns";
 import { useParams, useNavigate } from "react-router-dom";
 import AddNewIcon from "@mui/icons-material/AddBox";
+import InfoIcon from '@mui/icons-material/Info';
 import MyMessage from "../../components/Message";
 import LecturerInfoForm from "../../components/full_forms/LecturerInfoForm"
 
@@ -169,7 +170,7 @@ const MyInfo = () => {
   return (
     <div>
       <Box className="topbar">
-        <AddNewIcon />
+        <InfoIcon />
         <Typography
           sx={{ marginLeft: "15px", fontWeight: "bold" }}
           variant="subtitle2"

@@ -6,7 +6,7 @@ import AxiosInstance from "../../components/AxiosInstance";
 import { Box, IconButton, Typography, Grid } from "@mui/material";
 import CalendarViewMonthIcon from "@mui/icons-material/CalendarViewMonth";
 import MyButton from "../../components/forms/MyButton";
-import EditIcon from "@mui/icons-material/Edit";
+import InfoIcon from '@mui/icons-material/Info';
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { MaterialReactTable } from "material-react-table";
@@ -125,7 +125,7 @@ const ListDocument = () => {
               component={Link}
               to={`/documents/edit/${row.original.id}`}
             >
-              <EditIcon />
+              <InfoIcon />
             </IconButton>
             <IconButton
               color="error"

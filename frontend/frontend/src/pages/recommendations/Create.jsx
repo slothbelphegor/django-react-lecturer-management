@@ -6,9 +6,6 @@ import { useEffect } from "react";
 import AddNewIcon from "@mui/icons-material/AddBox";
 import MyMessage from "../../components/Message";
 import { format } from "date-fns";
-
-
-import EvaluationForm from "../../components/full_forms/EvaluationForm";
 import RecommendationForm from "../../components/full_forms/RecommendationForm";
 
 const CreateRecommendation = () => {
@@ -77,7 +74,7 @@ const CreateRecommendation = () => {
           sx={{ marginLeft: "15px", fontWeight: "bold" }}
           variant="subtitle2"
         >
-          Đánh giá giảng viên {currentLecturer?.name}
+          Thêm đề xuất mới
         </Typography>
       </Box>
       <RecommendationForm submission={submission}/>
