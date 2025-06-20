@@ -52,7 +52,7 @@ class LecturerViewSet(viewsets.ModelViewSet):
             'education_department': True,
             'it_faculty': True,
         },
-        'sign_contract': {
+        'sign_contract,count_pending_lecturers': {
             'education_department': True,
         },
         'degree_count': {
@@ -63,6 +63,12 @@ class LecturerViewSet(viewsets.ModelViewSet):
             'anon': True,
             'user': True,
         },
+        'count_all_lecturers': {
+            'user': True
+        },
+        'count_potential_lecturers': {
+            'user': True
+        }
     }
     def list(self, request):
         lecturer_group = Group.objects.filter(name='lecturer').first()
@@ -72,6 +78,16 @@ class LecturerViewSet(viewsets.ModelViewSet):
         )
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def count_all_lecturers(self, request):
+        lecturer_group = Group.objects.filter(name='lecturer').first()
+        queryset = Lecturer.objects.filter(
+            Q(user__groups=lecturer_group) |
+            Q(status="Đã ký hợp đồng")
+        )
+        total = queryset.count()
+        return Response(total)
     
     @action(detail=False, methods=['get'])
     def all(self, request):
@@ -88,6 +104,26 @@ class LecturerViewSet(viewsets.ModelViewSet):
         ).distinct()
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
+    
+    @action(detail=False, methods=["get"])
+    def count_potential_lecturers(self, request):
+        potential_group = Group.objects.filter(name='potential_lecturer').first()
+        queryset = Lecturer.objects.filter(
+            Q(status="Chưa duyệt hồ sơ") |
+            Q(user__groups=potential_group)
+        ).distinct()
+        count = queryset.count()
+        return Response(count)
+    
+    @action(detail=False, methods=["get"])
+    def count_pending_lecturers(self, request):
+        potential_group = Group.objects.filter(name='potential_lecturer').first()
+        queryset = Lecturer.objects.filter(
+            Q(status="Hồ sơ hợp lệ") |
+            Q(user__groups=potential_group)
+        ).distinct()
+        count = queryset.count()
+        return Response(count)
     
     @action(detail=False, methods=['get'])
     def degree_count(self, request):
@@ -528,6 +564,9 @@ class LecturerRecommendationViewSet(viewsets.ModelViewSet):
         },
         'create,destroy,me': {
             'lecturer': True
+        },
+        'count_unchecked': {
+            'it_faculty': True
         }
     }
 
@@ -535,6 +574,14 @@ class LecturerRecommendationViewSet(viewsets.ModelViewSet):
         queryset = self.queryset.all()
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def count_unchecked(self, request):
+        queryset = self.queryset.filter(
+            status="Chưa được duyệt"
+        )
+        count = queryset.count()
+        return Response(count)
     
     def retrieve(self, request, pk=None):
         print("Retrieve called with pk:", pk)
